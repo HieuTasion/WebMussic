@@ -54,8 +54,11 @@ function renderProfile(user, users) {
   setText("detail-email", user.email || "-");
   setText("detail-id", user.id ? `#${user.id}` : "-");
   setText("detail-createdAt", formatDateTime(user.createdAt));
-  setText("profile-status", "Dang hoat dong");
-  setText("activity-text", `Tai khoan duoc dang nhap tu ${users.length} nguoi dung da luu trong he thong.`);
+  setText("profile-status", "Đang hoạt động");
+  setText(
+    "activity-text",
+    `Tài khoản được đăng nhập từ ${users.length} người dùng đã lưu trong hệ thống.`,
+  );
 
   const avatar = document.getElementById("profile-avatar");
   if (avatar) {
@@ -81,28 +84,31 @@ function renderProfile(user, users) {
           copyBtn.innerHTML = '<i class="bi bi-copy"></i>';
         }, 1200);
       } catch (error) {
-        console.error("Khong the copy email:", error);
+        console.error("Không thể copy email:", error);
       }
     });
   }
 }
 
 function renderGuestState() {
-  setText("profile-name", "Ban chua dang nhap");
-  setText("profile-email", "Hay dang nhap de xem ho so.");
+  setText("profile-name", "Bạn chưa đăng nhập");
+  setText("profile-email", "Hãy đăng nhập để xem hồ sơ.");
   setText("detail-name", "-");
   setText("detail-email", "-");
   setText("detail-id", "-");
   setText("detail-createdAt", "-");
-  setText("profile-status", "Chua xac thuc");
-  setText("activity-text", "Dang nhap de xem thong tin ho so va trang thai tai khoan.");
+  setText("profile-status", "Chưa xác thực");
+  setText(
+    "activity-text",
+    "Đăng nhập để xem thông tin hồ sơ và trạng thái tài khoản.",
+  );
 
   const avatar = document.getElementById("profile-avatar");
   if (avatar) avatar.textContent = "?";
 
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {
-    logoutBtn.textContent = "Ve dang nhap";
+    logoutBtn.textContent = "Về đăng nhập";
     logoutBtn.addEventListener("click", () => {
       window.location.href = "login.html";
     });
@@ -147,7 +153,10 @@ function formatDateTime(value) {
 }
 
 function getInitials(value) {
-  const parts = String(value || "").trim().split(/\s+/).filter(Boolean);
+  const parts = String(value || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
   if (!parts.length) return "U";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();

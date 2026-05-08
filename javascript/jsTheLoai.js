@@ -2,7 +2,7 @@ const API_URL = "https://68ef6d3fb06cc802829d58ca.mockapi.io/songs";
 let genresData = [];
 
 function normalizeGenre(raw) {
-  if (!raw) return "Khac";
+  if (!raw) return "Khác";
 
   let name = raw.trim().toLowerCase();
 
@@ -23,7 +23,7 @@ async function fetchSongsAndProcessGenres() {
   if (!grid) return;
 
   grid.innerHTML =
-    '<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: white;">Dang tai du lieu am nhac...</div>';
+    '<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: white;">\u0110ang tải dữ liệu âm nhạc...</div>';
 
   try {
     const res = await fetch(API_URL);
@@ -51,7 +51,7 @@ async function fetchSongsAndProcessGenres() {
 
     genresData = Array.from(genreMap.values()).map((genre) => ({
       ...genre,
-      desc: `Kham pha nhung giai dieu ${genre.name} tuyen chon`,
+      desc: `Khám phá những giai điệu ${genre.name} tuyển chọn`,
       icon: getIconByGenre(genre.name),
       bg: getGradientByGenre(genre.name),
     }));
@@ -73,7 +73,7 @@ async function fetchSongsAndProcessGenres() {
   } catch (error) {
     console.error("Loi API:", error);
     grid.innerHTML =
-      '<p style="color: red; text-align: center;">Khong the tai du lieu!</p>';
+      '<p style="color: red; text-align: center;">Không thể tải dữ liệu!</p>';
   }
 }
 
@@ -92,14 +92,14 @@ function renderSongsByGenre(genreName) {
   let html = `
     <div style="margin-bottom: 25px; animation: fadeIn 0.5s ease;">
       <button onclick="renderGenres('all')" style="background: #ffffff22; color: white; border: 1px solid white; padding: 10px 25px; border-radius: 30px; cursor: pointer;">
-        <i class="fas fa-arrow-left"></i> Quay lai the loai
+        <i class="fas fa-arrow-left"></i> Quay lại thể loại
       </button>
-      <h2 style="color: white; font-size: 2.2rem; margin-top: 20px;">Dong nhac: ${genre.name}</h2>
+      <h2 style="color: white; font-size: 2.2rem; margin-top: 20px;">Dòng nhạc: ${genre.name}</h2>
     </div>
   `;
 
   genre.songs.forEach((song, index) => {
-    const name = song.Name || "Khong ten";
+    const name = song.Name || "Không tên";
     const artist = song.Artist || "Nghe si";
     const img = song.Img || "https://via.placeholder.com/50";
     const likes = song.Likes || 0;
@@ -140,7 +140,7 @@ function renderGenres(filterValue = "all") {
 
   if (list.length === 0) {
     grid.innerHTML =
-      '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Khong tim thay the loai nao phu hop.</div>';
+      '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Không tìm thấy thể loại nào phù hợp.</div>';
     return;
   }
 
@@ -154,7 +154,7 @@ function renderGenres(filterValue = "all") {
             <h3>${genre.name}</h3>
             <p>${genre.desc}</p>
             <div class="genre-stats">
-              <span>${genre.songCount} bai hat</span>
+              <span>${genre.songCount} bài hát</span>
               <span>❤ ${genre.totalLikes}</span>
             </div>
             <button class="listen-btn" onclick="renderSongsByGenre('${genre.name.replace(/'/g, "\\'")}')">
@@ -204,10 +204,7 @@ function initGenreFilters() {
 function detectMoodByGenre(name) {
   const normalized = name.toLowerCase();
 
-  if (
-    normalized.includes("pop") 
-   
-  ) {
+  if (normalized.includes("pop")) {
     return "vui-tuoi";
   }
 
@@ -227,10 +224,7 @@ function detectMoodByGenre(name) {
     return "sau-lang";
   }
 
-   if (
-    normalized.includes("edm") ||
-    normalized.includes("dance")
-  ) {
+  if (normalized.includes("edm") || normalized.includes("dance")) {
     return "nang-luong";
   }
 

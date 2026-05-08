@@ -197,7 +197,7 @@ function persistCurrentSongMetaFromPlayer() {
     !!url &&
     !!title &&
     !/NVNP Music/i.test(title) &&
-    !/Chon bai hat de phat/i.test(artist || "");
+    !/Chọn bài hát để phát/i.test(artist || "");
 
   const queueSong =
     Array.isArray(currentQueue) && currentQueueIndex >= 0
@@ -210,7 +210,7 @@ function persistCurrentSongMetaFromPlayer() {
     ? getSongMetaFromSources(
         url,
         title,
-        artist || "Dang cap nhat nghe si",
+        artist || "Đang cập nhật nghệ sĩ",
         img,
         currentQueue,
         currentQueueIndex,
@@ -221,7 +221,9 @@ function persistCurrentSongMetaFromPlayer() {
     return currentSongMeta;
   }
 
-  currentSongMeta = getSongLyrics(snapshot) ? snapshot : mergeSongMeta(snapshot, fallbackSong);
+  currentSongMeta = getSongLyrics(snapshot)
+    ? snapshot
+    : mergeSongMeta(snapshot, fallbackSong);
 
   window.currentSongMeta = currentSongMeta;
   localStorage.setItem("currentSongMeta", JSON.stringify(currentSongMeta));
@@ -285,24 +287,24 @@ function trackRecentlyPlayedSong(song) {
 }
 
 function formatPlayedTime(value) {
-  if (!value) return "Vua nghe xong";
+  if (!value) return "Vừa nghe xong";
 
   const playedDate = new Date(value);
-  if (Number.isNaN(playedDate.getTime())) return "Vua nghe xong";
+  if (Number.isNaN(playedDate.getTime())) return "Vừa nghe xong";
 
   const diffMinutes = Math.max(
     0,
     Math.round((Date.now() - playedDate.getTime()) / 60000),
   );
 
-  if (diffMinutes < 1) return "Vua nghe xong";
-  if (diffMinutes < 60) return `${diffMinutes} phut truoc`;
+  if (diffMinutes < 1) return "Vừa nghe xong";
+  if (diffMinutes < 60) return `${diffMinutes} phút trước`;
 
   const diffHours = Math.round(diffMinutes / 60);
-  if (diffHours < 24) return `${diffHours} gio truoc`;
+  if (diffHours < 24) return `${diffHours} giờ trước`;
 
   const diffDays = Math.round(diffHours / 24);
-  return `${diffDays} ngay truoc`;
+  return `${diffDays} ngày trước`;
 }
 
 function normalizeSongKey(song) {
@@ -333,7 +335,7 @@ function setFavoriteButtonState(song) {
   favoriteBtn.innerHTML = favorite
     ? '<i class="bi bi-heart-fill"></i>'
     : '<i class="bi bi-heart"></i>';
-  favoriteBtn.title = favorite ? "Bo khoi yeu thich" : "Them vao yeu thich";
+  favoriteBtn.title = favorite ? "Bỏ khỏi yêu thích" : "Thêm vào yêu thích";
 }
 
 function toggleFavoriteCurrentSong() {
@@ -411,7 +413,7 @@ async function getAllSongs() {
       return songLibraryCache;
     })
     .catch((error) => {
-      console.error("Loi tai danh sach nhac:", error);
+      console.error("Lỗi tải danh sách nhạc:", error);
       return [];
     })
     .finally(() => {
@@ -509,9 +511,18 @@ function getSongLyrics(song) {
   return "";
 }
 
-function getSongMetaFromSources(url, name, artist, img, playlist = null, index = 0) {
+function getSongMetaFromSources(
+  url,
+  name,
+  artist,
+  img,
+  playlist = null,
+  index = 0,
+) {
   const playlistSong =
-    Array.isArray(playlist) && typeof index === "number" ? playlist[index] : null;
+    Array.isArray(playlist) && typeof index === "number"
+      ? playlist[index]
+      : null;
 
   const baseSong =
     playlistSong && typeof playlistSong === "object"
@@ -557,7 +568,7 @@ function mergeSongMeta(primarySong, secondarySong) {
 
 function getLyricsPreview(song, maxLength = 90) {
   const lyrics = getSongLyrics(song).replace(/\s+/g, " ").trim();
-  if (!lyrics) return "Chua co lyric";
+  if (!lyrics) return "Chưa có lời";
   if (lyrics.length <= maxLength) return lyrics;
   return `${lyrics.slice(0, maxLength).trimEnd()}...`;
 }
@@ -632,7 +643,7 @@ window.playThisSong = function (
   const allTotalTimes = document.querySelectorAll("#total-duration");
 
   if (allAudio.length === 0) {
-    alert("Khong tim thay thanh player de phat nhac!");
+    alert("Không tìm thấy thanh player để phát nhạc!");
     return;
   }
 
@@ -649,10 +660,19 @@ window.playThisSong = function (
     };
   });
 
-  currentSongMeta = getSongMetaFromSources(url, name, artist, img, playlist, index);
+  currentSongMeta = getSongMetaFromSources(
+    url,
+    name,
+    artist,
+    img,
+    playlist,
+    index,
+  );
   if (!getSongLyrics(currentSongMeta)) {
     const playlistSong =
-      Array.isArray(playlist) && typeof index === "number" ? playlist[index] : null;
+      Array.isArray(playlist) && typeof index === "number"
+        ? playlist[index]
+        : null;
     currentSongMeta = mergeSongMeta(currentSongMeta, playlistSong);
   }
   window.currentSongMeta = currentSongMeta;
@@ -679,7 +699,8 @@ window.playThisSong = function (
   } else {
     const matchedIndex = songLibraryCache.findIndex(
       (song) =>
-        song.Url === url || normalizeSongKey(song) === normalizeSongKey(currentSongMeta),
+        song.Url === url ||
+        normalizeSongKey(song) === normalizeSongKey(currentSongMeta),
     );
 
     if (matchedIndex !== -1) {
@@ -722,7 +743,7 @@ window.playThisSong = function (
       setFavoriteButtonState(currentSongMeta);
     })
     .catch((error) => {
-      console.error("Loi phat nhac:", error);
+      console.error("Lỗi phát nhạc:", error);
     });
 };
 
@@ -732,7 +753,9 @@ async function loadHotSongs() {
 
   try {
     const songs = await getAllSongs();
-    const hotSongs = [...songs].sort((a, b) => Number(b.Likes || 0) - Number(a.Likes || 0));
+    const hotSongs = [...songs].sort(
+      (a, b) => Number(b.Likes || 0) - Number(a.Likes || 0),
+    );
     window.__hotSongsQueue = hotSongs;
 
     container.innerHTML = hotSongs
@@ -759,7 +782,7 @@ async function loadHotSongs() {
       )
       .join("");
   } catch (error) {
-    console.error("Loi API:", error);
+    console.error("Lỗi API:", error);
   }
 }
 
@@ -798,7 +821,7 @@ async function loadTopGenres() {
             <div class="trend-number">${String(index + 1).padStart(2, "0")}</div>
             <div class="trend-info">
               <h4>${genre.name}</h4>
-              <p>${genre.songCount} bai hat - ${genre.likes} luot thich</p>
+              <p>${genre.songCount} bài hát - ${genre.likes} lượt thích</p>
             </div>
             <div class="trend-icon"><i class="bi bi-music-note-list"></i></div>
           </div>
@@ -806,7 +829,7 @@ async function loadTopGenres() {
       )
       .join("");
   } catch (error) {
-    console.error("Loi load top genres:", error);
+    console.error("Lỗi tải thể loại hàng đầu:", error);
   }
 }
 
@@ -848,13 +871,13 @@ function renderFavoritesPage() {
       <div class="hero-section mb-5 shadow-lg">
         <div class="row align-items-center">
           <div class="col-lg-8">
-            <span class="badge bg-teal mb-3 text-dark">THU VIEN RIENG</span>
-            <h1 class="display-5 fw-bold mb-2 text-white">Nhac yeu thich</h1>
-            <p class="lead mb-0 text-secondary">Tat ca bai hat ban da bam tim se nam o day.</p>
+            <span class="badge bg-teal mb-3 text-dark">THƯ VIỆN RIÊNG</span>
+            <h1 class="display-5 fw-bold mb-2 text-white">Nhạc yêu thích</h1>
+            <p class="lead mb-0 text-secondary">Tất cả bài hát bạn đã bấm tim sẽ nằm ở đây.</p>
           </div>
           <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
             <div class="text-white fs-1 fw-bold">${favorites.length}</div>
-            <div class="text-secondary">Bai hat da luu</div>
+            <div class="text-secondary">Bài hát đã lưu</div>
           </div>
         </div>
       </div>
@@ -880,7 +903,7 @@ function renderFavoritesPage() {
                   `,
                 )
                 .join("")
-            : '<div class="text-secondary">Chua co bai hat nao trong danh sach yeu thich.</div>'
+            : '<div class="text-secondary">Chưa có bài hát nào trong danh sách yêu thích.</div>'
         }
       </div>
     </div>
@@ -905,25 +928,25 @@ function renderRecentlyPlayedPage() {
     <div class="container-fluid py-4 px-4">
       <section class="recent-page-hero mb-4">
         <div class="recent-hero-copy">
-          <span class="recent-badge">THU VIEN CUA BAN</span>
-          <h1>Nghe gan day</h1>
-          <p>Danh sach bai hat ban vua nghe, tap trung vao track va sap xep tu moi nhat den cu hon.</p>
+          <span class="recent-badge">THƯ VIỆN CỦA BẠN</span>
+          <h1>Nghe gần đây</h1>
+          <p>Danh sách bài hát bạn vừa nghe, tập trung vào track và sắp xếp từ mới nhất đến cũ hơn.</p>
         </div>
         <div class="recent-hero-meta">
           <div class="recent-count">${recentlyPlayed.length}</div>
-          <div class="recent-count-label">Bai hat da ghi nho</div>
+          <div class="recent-count-label">Bài hát đã ghi nhớ</div>
           <div class="recent-last-song">${
             latestSong
-              ? `Gan nhat: <strong>${latestSong.Name}</strong>`
-              : "Chua co bai hat nao duoc phat"
+              ? `Gần nhất: <strong>${latestSong.Name}</strong>`
+              : "Chưa có bài hát nào được phát"
           }</div>
         </div>
       </section>
 
       <section class="recent-list-shell">
         <div class="recent-list-header">
-          <div>Bai hat</div>
-          <div>Nghe luc</div>
+          <div>Bài hát</div>
+          <div>Nghe lúc</div>
         </div>
         <div class="recent-list-body">
           ${
@@ -937,7 +960,7 @@ function renderRecentlyPlayedPage() {
                           <img src="${song.Img}" alt="${song.Name}" class="recent-song-thumb" onerror="this.src='https://picsum.photos/80/80'">
                           <div class="recent-song-info">
                             <h3>${song.Name}</h3>
-                            <p>${song.Artist || "Dang cap nhat nghe si"}</p>
+                            <p>${song.Artist || "Đang cập nhật nghệ sĩ"}</p>
                           </div>
                         </div>
                         <div class="recent-song-meta">
@@ -953,8 +976,8 @@ function renderRecentlyPlayedPage() {
               : `
                 <div class="recent-empty-state">
                   <i class="bi bi-clock-history"></i>
-                  <h3>Chua co bai hat nao</h3>
-                  <p>Mo mot bai hat bat ky, lich su nghe gan day se hien o day.</p>
+                  <h3>Chưa có bài hát nào</h3>
+                  <p>Mở một bài hát bất kỳ, lịch sử nghe gần đây sẽ hiển thị ở đây.</p>
                 </div>
               `
           }
@@ -983,7 +1006,7 @@ window.toggleFavoriteSongByKey = function (url, name, artist, img) {
   }
 
   const contentArea = document.getElementById("main-content");
-  if (contentArea && contentArea.innerText.includes("Nhac yeu thich")) {
+  if (contentArea && contentArea.innerText.includes("Nhạc yêu thích")) {
     renderFavoritesPage();
   }
 };
@@ -992,7 +1015,6 @@ window.openAlbum = function (id) {
   localStorage.setItem("selectedAlbumId", id);
   loadPage("player-page.html");
 };
-
 
 // Phần nhạc yêu thích
 window.loadPage = function (pageUrl) {
@@ -1049,7 +1071,7 @@ window.loadPage = function (pageUrl) {
   fetch(pageUrl)
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Khong tim thay trang: " + pageUrl);
+        throw new Error("Không tìm thấy trang: " + pageUrl);
       }
       return response.text();
     })
@@ -1100,7 +1122,7 @@ window.loadPage = function (pageUrl) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     })
     .catch((error) => {
-      contentArea.innerHTML = `<div class="p-4 text-danger">Loi he thong: ${error.message}</div>`;
+      contentArea.innerHTML = `<div class="p-4 text-danger">Lỗi hệ thống: ${error.message}</div>`;
     });
 };
 
@@ -1117,14 +1139,14 @@ async function initAlbumSlider() {
       renderSlide();
     }, 5000);
   } catch (error) {
-    console.error("Loi slider:", error);
+    console.error("Lỗi trượt:", error);
   }
 }
 
 async function initPlayerPage() {
   const albumId = localStorage.getItem("selectedAlbumId");
   if (!albumId) {
-    alert("Khong tim thay album!");
+    alert("Không tìm thấy album!");
     loadPage("Home.html");
     return;
   }
@@ -1137,7 +1159,7 @@ async function initPlayerPage() {
     const album = albums.find((item) => String(item.id) === String(albumId));
 
     if (!album) {
-      alert("Album khong ton tai!");
+      alert("Album không tồn tại!");
       loadPage("Home.html");
       return;
     }
@@ -1162,7 +1184,7 @@ async function initPlayerPage() {
     if (!filteredSongs.length) {
       songList.innerHTML = `
         <div class="text-secondary text-center py-5">
-          Khong tim thay bai hat nao khop voi album nay trong API.
+          Không tìm thấy bài hát nào khớp với album này trong API.
         </div>
       `;
       playAllBtn.onclick = null;

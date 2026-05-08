@@ -15,29 +15,34 @@ const LYRICS_API_URL = "https://68ef6d3fb06cc802829d58ca.mockapi.io/songs";
 // ];
 
 const SONG_LYRIC_TUNING = {
-  "1": { leadIn: 6.4, tailOut: 4.6, shift: -0.18, lineScale: 1.04 },
-  "2": { leadIn: 5.2, tailOut: 4.3, shift: -0.12, lineScale: 1.02 },
-  "3": { leadIn: 8.4, tailOut: 5.0, shift: -0.16, lineScale: 1.05 },
-  "4": { leadIn: 6.2, tailOut: 5.6, shift: -0.22, lineScale: 1.08 },
-  "5": { leadIn: 4.6, tailOut: 4.8, shift: -0.1, lineScale: 1.02 },
-  "6": { leadIn: 7.8, tailOut: 5.8, shift: -0.16, lineScale: 1.06 },
-  "7": { leadIn: 2.2, tailOut: 3.1, shift: -0.05, lineScale: 0.98 },
-  "8": { leadIn: 7.4, tailOut: 4.8, shift: -0.15, lineScale: 1.03 },
-  "9": { leadIn: 5.4, tailOut: 4.6, shift: -0.12, lineScale: 1.02 },
-  "10": { leadIn: 5.2, tailOut: 3.6, shift: -0.12, lineScale: 1.04 },
-  "11": { leadIn: 4.0, tailOut: 3.8, shift: -0.08, lineScale: 1.0 },
-  "12": { leadIn: 5.4, tailOut: 3.2, shift: -0.06, lineScale: 0.96 },
-  "13": { leadIn: 3.0, tailOut: 4.1, shift: -0.08, lineScale: 1.0 },
-  "14": { leadIn: 3.6, tailOut: 4.2, shift: -0.12, lineScale: 1.04 },
-  "15": { leadIn: 2.2, tailOut: 3.4, shift: -0.04, lineScale: 0.96 },
-  "16": { leadIn: 4.8, tailOut: 4.5, shift: -0.18, lineScale: 1.05 },
-  antihero: { leadIn: 4.8, tailOut: 4.5, shift: -0.18, lineScale: 1.05 },
-  haytraochoanh: { leadIn: 6.2, tailOut: 5.6, shift: -0.22, lineScale: 1.08 },
-  chayngaydi: { leadIn: 4.6, tailOut: 4.8, shift: -0.1, lineScale: 1.02 },
-  somethingjustlikethis: { leadIn: 3.6, tailOut: 4.2, shift: -0.12, lineScale: 1.04 },
-  alone: { leadIn: 5.4, tailOut: 3.2, shift: -0.06, lineScale: 0.96 },
-  beautyandabeat: { leadIn: 5.2, tailOut: 3.6, shift: -0.12, lineScale: 1.04 },
-  dontstopmenow: { leadIn: 2.2, tailOut: 3.4, shift: -0.04, lineScale: 0.96 },
+  1: { leadIn: 4.2, tailOut: 3.6, shift: -0.18, lineScale: 1.04 },
+  2: { leadIn: 3.6, tailOut: 3.3, shift: -0.12, lineScale: 1.02 },
+  3: { leadIn: 5.2, tailOut: 3.8, shift: -0.16, lineScale: 1.05 },
+  4: { leadIn: 4.0, tailOut: 4.0, shift: -0.22, lineScale: 1.08 },
+  5: { leadIn: 3.2, tailOut: 3.6, shift: -0.1, lineScale: 1.02 },
+  6: { leadIn: 5.0, tailOut: 4.2, shift: -0.16, lineScale: 1.06 },
+  7: { leadIn: 1.8, tailOut: 2.4, shift: -0.05, lineScale: 0.98 },
+  8: { leadIn: 4.6, tailOut: 3.6, shift: -0.15, lineScale: 1.03 },
+  9: { leadIn: 3.8, tailOut: 3.4, shift: -0.12, lineScale: 1.02 },
+  10: { leadIn: 3.6, tailOut: 2.8, shift: -0.12, lineScale: 1.04 },
+  11: { leadIn: 3.0, tailOut: 3.0, shift: -0.08, lineScale: 1.0 },
+  12: { leadIn: 3.8, tailOut: 2.6, shift: -0.06, lineScale: 0.96 },
+  13: { leadIn: 2.2, tailOut: 3.2, shift: -0.08, lineScale: 1.0 },
+  14: { leadIn: 2.8, tailOut: 3.2, shift: -0.12, lineScale: 1.04 },
+  15: { leadIn: 1.8, tailOut: 2.6, shift: -0.04, lineScale: 0.96 },
+  16: { leadIn: 3.4, tailOut: 3.4, shift: -0.18, lineScale: 1.05 },
+  antihero: { leadIn: 3.4, tailOut: 3.4, shift: -0.18, lineScale: 1.05 },
+  haytraochoanh: { leadIn: 4.0, tailOut: 4.0, shift: -0.22, lineScale: 1.08 },
+  chayngaydi: { leadIn: 3.2, tailOut: 3.6, shift: -0.1, lineScale: 1.02 },
+  somethingjustlikethis: {
+    leadIn: 2.8,
+    tailOut: 3.2,
+    shift: -0.12,
+    lineScale: 1.04,
+  },
+  alone: { leadIn: 3.8, tailOut: 2.6, shift: -0.06, lineScale: 0.96 },
+  beautyandabeat: { leadIn: 3.6, tailOut: 2.8, shift: -0.12, lineScale: 1.04 },
+  dontstopmenow: { leadIn: 1.8, tailOut: 2.6, shift: -0.04, lineScale: 0.96 },
 };
 
 let lyricsSyncState = {
@@ -88,7 +93,8 @@ function getCurrentSongMeta() {
 }
 
 function inferSongMetaFromPlayer() {
-  const audio = document.getElementById("main-audio") || document.querySelector("audio");
+  const audio =
+    document.getElementById("main-audio") || document.querySelector("audio");
   const title = document.getElementById("player-title")?.innerText?.trim();
   const artist = document.getElementById("player-artist")?.innerText?.trim();
   const img = document.getElementById("player-img")?.getAttribute("src") || "";
@@ -98,14 +104,14 @@ function inferSongMetaFromPlayer() {
     !!url &&
     !!title &&
     !/NVNP Music/i.test(title) &&
-    !/Chon bai hat de phat/i.test(artist || "");
+    !/Chọn bài hát để phát/i.test(artist || "");
 
   if (!hasRealSong) return null;
 
   return {
     Url: url,
     Name: title,
-    Artist: artist || "Dang cap nhat nghe si",
+    Artist: artist || "Đang cập nhật nghệ sĩ",
     Img: img,
   };
 }
@@ -168,12 +174,11 @@ function saveStoredTuningMap(map) {
 function getSongTuning(song) {
   const songId = String(song?.id || "").trim();
   const token = normalizeSongToken(song?.Name || "");
-  const baseTuning =
-    SONG_LYRIC_TUNING[songId] ||
+  const baseTuning = SONG_LYRIC_TUNING[songId] ||
     SONG_LYRIC_TUNING[token] || {
       leadIn: 4.2,
       tailOut: 4.2,
-      shift: -0.06,
+      shift: -0.15,
       lineScale: 1,
     };
 
@@ -283,12 +288,37 @@ async function hydrateSongWithLibrary(song) {
     localStorage.setItem("currentSongMeta", JSON.stringify(mergedSong));
     return mergedSong;
   } catch (error) {
-    console.error("Loi tai lyric tu API:", error);
+    console.error("Lỗi tải lyric từ API:", error);
     return song;
   }
 }
 
+function parseLrcFormat(lyricsText) {
+  const lrcRegex = /^\[(\d{2}):(\d{2})\.(\d{2,3})\](.*?)$/gm;
+  const matches = Array.from(String(lyricsText || "").matchAll(lrcRegex));
+
+  if (matches.length === 0) return null;
+
+  return matches.map((match) => {
+    const minutes = parseInt(match[1], 10);
+    const seconds = parseInt(match[2], 10);
+    const milliseconds = parseInt(match[3].padEnd(3, "0"), 10);
+    const text = match[4].trim();
+    const timeInSeconds = minutes * 60 + seconds + milliseconds / 1000;
+
+    return {
+      time: timeInSeconds,
+      text: text,
+    };
+  });
+}
+
 function splitLyricsLines(lyricsText) {
+  const lrcData = parseLrcFormat(lyricsText);
+  if (lrcData && lrcData.length > 0) {
+    return lrcData;
+  }
+
   const rawLines = String(lyricsText || "")
     .replace(/\r/g, "")
     .replace(/<br\s*\/?>/gi, "\n")
@@ -358,25 +388,73 @@ function estimateLineWeight(text) {
   if (!normalized) return 0.55;
 
   const wordCount = normalized.split(/\s+/).filter(Boolean).length;
-  const punctuationBonus = (normalized.match(/[,.;:!?]/g) || []).length * 0.55;
-  const upperBonus = (normalized.match(/[A-Z]/g) || []).length * 0.04;
-  const lengthBonus = Math.min(normalized.length / 14, 3.6);
+  const charLength = normalized.length;
+  const punctuationBonus = (normalized.match(/[,.;:!?]/g) || []).length * 0.45;
+  const upperBonus = (normalized.match(/[A-Z]/g) || []).length * 0.02;
+  const lengthBonus = Math.min(charLength / 16, 2.8);
 
-  return Math.max(1.2, wordCount * 1.05 + punctuationBonus + upperBonus + lengthBonus);
+  const baseWeight = Math.max(
+    0.8,
+    wordCount * 0.85 + punctuationBonus + upperBonus + lengthBonus,
+  );
+  return Math.max(0.9, Math.min(baseWeight, 3.5));
 }
 
 function buildLyricsTimeline(song, lineNodes, audio) {
-  const playableLines = lineNodes.filter((line) => !line.classList.contains("is-empty"));
+  const playableLines = lineNodes.filter(
+    (line) => !line.classList.contains("is-empty"),
+  );
   if (!playableLines.length) return [];
 
   const tuning = getSongTuning(song);
-  const duration = Number.isFinite(audio?.duration) && audio.duration > 0 ? audio.duration : 0;
-  const usableDuration = Math.max(duration - tuning.leadIn - tuning.tailOut, playableLines.length * 1.6);
+  const duration =
+    Number.isFinite(audio?.duration) && audio.duration > 0 ? audio.duration : 0;
+
+  // Check if lines have LRC timing data
+  const lrcTimings = playableLines.map((line) => {
+    const text = line.innerText || "";
+    const lrcMatch = text.match(/^\[(\d{2}):(\d{2})\.(\d{2,3})\]/);
+    if (lrcMatch) {
+      const minutes = parseInt(lrcMatch[1], 10);
+      const seconds = parseInt(lrcMatch[2], 10);
+      const ms = parseInt(lrcMatch[3].padEnd(3, "0"), 10);
+      return minutes * 60 + seconds + ms / 1000;
+    }
+    return null;
+  });
+
+  const hasLrcTiming = lrcTimings.some((t) => t !== null);
+
+  if (hasLrcTiming) {
+    return playableLines.map((line, index) => {
+      let start =
+        lrcTimings[index] ??
+        (index === 0 ? 0 : (playableLines[index - 1]?.dataset?.endTime ?? 0));
+      let end = lrcTimings[index + 1] ?? start + 1.8;
+
+      if (lrcTimings[index] === null && index > 0) {
+        const prevTime = lrcTimings[index - 1];
+        start = prevTime ? prevTime + 1.8 : 0;
+        end = start + 1.8;
+      }
+
+      return {
+        element: line,
+        start: Math.max(0, start + tuning.shift),
+        end: Math.max(start + 0.8, end + tuning.shift),
+      };
+    });
+  }
+
+  const usableDuration = Math.max(
+    duration - tuning.leadIn - tuning.tailOut,
+    playableLines.length * 1.6,
+  );
 
   const weights = playableLines.map((line, index) => {
     const baseWeight = estimateLineWeight(line.innerText) * tuning.lineScale;
     const previousText = playableLines[index - 1]?.innerText || "";
-    const transitionBonus = /[,.;:!?]$/.test(previousText) ? 0.42 : 0;
+    const transitionBonus = /[,.;:!?]$/.test(previousText) ? 0.32 : 0;
     return baseWeight + transitionBonus;
   });
 
@@ -384,8 +462,14 @@ function buildLyricsTimeline(song, lineNodes, audio) {
   let cursor = tuning.leadIn;
 
   return playableLines.map((line, index) => {
-    const seconds = totalWeight > 0 ? (weights[index] / totalWeight) * usableDuration : usableDuration / playableLines.length;
-    const minSeconds = Math.max(1.15, Math.min(2.2, line.innerText.length / 18));
+    const seconds =
+      totalWeight > 0
+        ? (weights[index] / totalWeight) * usableDuration
+        : usableDuration / playableLines.length;
+    const minSeconds = Math.max(
+      1.15,
+      Math.min(2.2, line.innerText.length / 18),
+    );
     const lineDuration = Math.max(seconds, minSeconds);
     const start = cursor;
     cursor += lineDuration;
@@ -428,10 +512,14 @@ function setActiveLine(audio) {
   }
 
   const previousIndex = lyricsSyncState.activeIndex;
-  if (previousIndex !== -1 && activeIndex !== -1 && previousIndex !== activeIndex) {
+  if (
+    previousIndex !== -1 &&
+    activeIndex !== -1 &&
+    previousIndex !== activeIndex
+  ) {
     const previousLine = timeline[previousIndex];
     const nextLine = timeline[activeIndex];
-    const holdWindow = 0.24;
+    const holdWindow = 0.18;
 
     if (
       previousLine &&
@@ -446,14 +534,23 @@ function setActiveLine(audio) {
   lyricsSyncState.activeIndex = activeIndex;
 
   timeline.forEach((item, index) => {
-    item.element.classList.toggle("is-past", activeIndex !== -1 && index < activeIndex);
+    item.element.classList.toggle(
+      "is-past",
+      activeIndex !== -1 && index < activeIndex,
+    );
     item.element.classList.toggle("is-active", index === activeIndex);
-    item.element.classList.toggle("is-upcoming", activeIndex === -1 || index > activeIndex);
+    item.element.classList.toggle(
+      "is-upcoming",
+      activeIndex === -1 || index > activeIndex,
+    );
   });
 
   const activeLine = timeline[activeIndex]?.element;
   if (activeLine) {
-    const lineTop = activeLine.offsetTop - content.clientHeight / 2 + activeLine.clientHeight / 2;
+    const lineTop =
+      activeLine.offsetTop -
+      content.clientHeight / 2 +
+      activeLine.clientHeight / 2;
     content.scrollTo({ top: Math.max(lineTop, 0), behavior: "smooth" });
   }
 }
@@ -529,40 +626,44 @@ function renderLyrics(song) {
     return;
   }
 
-  title.innerText = song.Name || "Khong co tieu de";
-  artist.innerText = song.Artist || "Khong ro nghe si";
+  title.innerText = song.Name || "Không có tiêu đề";
+  artist.innerText = song.Artist || "Không rõ nghệ sĩ";
   cover.src = song.Img || "https://picsum.photos/300/300";
   cover.onerror = () => {
     cover.src = "https://picsum.photos/300/300";
   };
   subline.innerText = song.Times
-    ? `Thoi luong ${song.Times}${song.Genre ? ` • ${song.Genre}` : ""}`
-    : song.Genre || "Dang dong bo lyric";
+    ? `Thời lượng ${song.Times}${song.Genre ? ` • ${song.Genre}` : ""}`
+    : song.Genre || "Đang đồng bộ lời";
 
   const lyricsText = getSongLyrics(song);
 
   if (lyricsText.trim()) {
     const lines = splitLyricsLines(lyricsText);
+    const isLrcFormat =
+      lines.length > 0 && typeof lines[0] === "object" && lines[0].text;
+
     content.innerHTML = `
       <div class="lyrics-list">
         ${lines
-          .map((line) =>
-            line
-              ? `<p class="lyric-line is-upcoming">${escapeHtml(line)}</p>`
-              : '<p class="lyric-line is-empty">&nbsp;</p>',
-          )
+          .map((line) => {
+            const text = isLrcFormat ? line.text : line;
+            return text
+              ? `<p class="lyric-line is-upcoming">${escapeHtml(text)}</p>`
+              : '<p class="lyric-line is-empty">&nbsp;</p>';
+          })
           .join("")}
       </div>
     `;
-    source.innerText = "Lyric synced";
+    source.innerText = isLrcFormat ? "LRC Đồng bộ" : "Lời đồng bộ";
   } else {
     content.innerHTML = `
       <div class="empty-state">
-        <p>Chua co du lieu loi cho bai hat nay.</p>
-        <p>Mo bai khac hoac bo sung lyric trong API de trang micro dong bo duoc.</p>
+        <p>Chưa có dữ liệu lời cho bài hát này.</p>
+        <p>Mở bài khác hoặc bổ sung lời trong API để trang micro đồng bộ được.</p>
       </div>
     `;
-    source.innerText = "Chua co lyric";
+    source.innerText = "Chưa có lời";
   }
 
   bindTuningControls(song);
@@ -580,9 +681,9 @@ function renderNoSongState() {
   const source = document.getElementById("lyrics-source");
   const progressLabel = document.getElementById("lyrics-progress-label");
 
-  if (title) title.innerText = "Chua co bai hat nao";
-  if (artist) artist.innerText = "Hay chon 1 bai hat tren player";
-  if (subline) subline.innerText = "Micro se hien thong tin bai dang phat";
+  if (title) title.innerText = "Chưa có bài hát nào";
+  if (artist) artist.innerText = "Hãy chọn 1 bài hát trên player";
+  if (subline) subline.innerText = "Micro sẽ hiển thị thông tin bài đang phát";
   if (cover) {
     cover.src = "https://picsum.photos/300/300?blur=3";
   }
@@ -590,13 +691,13 @@ function renderNoSongState() {
   if (content) {
     content.innerHTML = `
       <div class="empty-state">
-        <p>Chua co bai hat nao dang phat.</p>
-        <p>Hay quay lai player, yeu thich hoac nghe gan day de chon bai truoc khi mo micro.</p>
+        <p>Chưa có bài hát nào đang phát.</p>
+        <p>Hãy quay lại player, yêu thích hoặc nghe gần đây để chọn bài trước khi mở micro.</p>
       </div>
     `;
   }
 
-  if (source) source.innerText = "No song";
+  if (source) source.innerText = "Không có bài";
   if (progressLabel) progressLabel.innerText = "00:00 / 00:00";
 }
 
@@ -619,7 +720,10 @@ window.initLyricsPage = async function () {
 
   const hydratedSong = await hydrateSongWithLibrary(song);
   window.currentSongMeta = hydratedSong || song;
-  localStorage.setItem("currentSongMeta", JSON.stringify(window.currentSongMeta));
+  localStorage.setItem(
+    "currentSongMeta",
+    JSON.stringify(window.currentSongMeta),
+  );
   renderLyrics(hydratedSong || song);
 };
 
