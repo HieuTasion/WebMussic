@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NVNP Music Dashboard</title>
+    <link rel="stylesheet" href="/style/styleDashBoard.css" />
+    <link rel="stylesheet" href="/style/styleTheLoaiNhac.css" />
+    <link rel="stylesheet" href="/style/styleLyrics.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body class="dashboard-page">
+    <div class="sidebar">
+      <div class="logo">NVNP Music</div>
+
+      <nav>
+        <div class="section-title" onclick="toggleMenu('menu-khampha', this)">
+          Kham pha
+        </div>
+        <div id="menu-khampha" class="menu">
+          <div class="menu-item active" onclick="loadPage('Home.html')">
+            Trang chu
+          </div>
+          <div class="menu-item" onclick="loadPage('TheLoai.html')">
+            The loai nhac
+          </div>
+        </div>
+      </nav>
+
+      <nav>
+        <div class="section-title" onclick="toggleMenu('menu-thuvien', this)">
+          Thu vien cua toi
+        </div>
+        <div id="menu-thuvien" class="menu">
+          <div class="menu-item" onclick="loadPage('recently-played')">
+            Nghe gan day
+          </div>
+          <div class="menu-item" onclick="loadPage('favorites')">
+            Nhac yeu thich
+          </div>
+        </div>
+      </nav>
+
+      <nav>
+        <div class="section-title" onclick="toggleMenu('menu-caidat', this)">
+          He thong
+        </div>
+        <div id="menu-caidat" class="menu">
+          <div class="menu-item">Cai dat</div>
+        </div>
+      </nav>
+
+      <nav>
+        <div class="section-title" onclick="toggleMenu('menu-taikhoan', this)">
+          Tai khoan
+        </div>
+        <div id="menu-taikhoan" class="menu">
+          <div class="menu-item" onclick="window.location.href='profile.html'">
+            Ho so
+          </div>
+          <div class="menu-item" onclick="window.location.href='login.html'">
+            Dang nhap
+          </div>
+          <div class="menu-item" onclick="window.location.href='register.html'">
+            Dang ky
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="content" id="main-content"></div>
+
+    <div
+      class="fixed-bottom bg-card border-top border-secondary"
+      style="z-index: 1050; height: 100px; background: #111818"
+    >
+      <audio id="main-audio">
+        <source id="audio-source" src="" type="audio/mpeg" />
+      </audio>
+
+      <div class="container-fluid h-100 p-0">
+        <div class="row h-100 align-items-center g-0 px-4">
+          <div class="col-3 d-flex align-items-center">
+            <img
+              id="player-img"
+              src="https://picsum.photos/60/60?blur=10"
+              class="rounded shadow-sm me-3"
+              style="
+                width: 65px;
+                height: 65px;
+                object-fit: cover;
+                border: 1px solid #222;
+              "
+            />
+            <div class="text-truncate">
+              <h6
+                id="player-title"
+                class="mb-1 text-white fw-bold text-truncate"
+              >
+                NVNP Music
+              </h6>
+              <p
+                id="player-artist"
+                class="small text-secondary mb-0 text-truncate"
+              >
+                Chon bai hat de phat
+              </p>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="d-flex flex-column align-items-center">
+              <div class="d-flex align-items-center gap-4 mb-2">
+                <button
+                  id="shuffle-btn"
+                  class="btn btn-link text-secondary p-0 fs-5"
+                  type="button"
+                  title="Phat ngau nhien"
+                >
+                  <i class="bi bi-shuffle"></i>
+                </button>
+                <button
+                  id="prev-btn"
+                  class="btn btn-link text-dark p-0 fs-4"
+                  type="button"
+                  title="Bai truoc"
+                >
+                  <i class="bi bi-skip-start-fill"></i>
+                </button>
+
+                <button
+                  id="play-pause-btn"
+                  class="btn btn-teal rounded-circle d-flex align-items-center justify-content-center shadow"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-play-fill fs-3 text-dark"></i>
+                </button>
+
+                <button
+                  id="next-btn"
+                  class="btn btn-link text-dark p-0 fs-4"
+                  type="button"
+                  title="Bai tiep"
+                >
+                  <i class="bi bi-skip-end-fill"></i>
+                </button>
+                <button
+                  id="favorite-btn"
+                  class="btn btn-link text-secondary p-0 fs-5"
+                  type="button"
+                  title="Them vao yeu thich"
+                >
+                  <i class="bi bi-heart"></i>
+                </button>
+              </div>
+
+              <div class="d-flex align-items-center w-100 gap-2">
+                <span
+                  id="current-time"
+                  class="small text-secondary"
+                  style="font-size: 11px; min-width: 35px; text-align: right"
+                  >00:00</span
+                >
+                <input
+                  type="range"
+                  id="progress-bar"
+                  class="flex-grow-1 player-progress"
+                  min="0"
+                  max="100"
+                  value="0"
+                />
+                <span
+                  id="total-duration"
+                  class="small text-secondary"
+                  style="font-size: 11px; min-width: 35px"
+                  >00:00</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="col-3 d-flex align-items-center justify-content-end gap-3"
+          >
+            <button
+              class="btn btn-link text-secondary p-0"
+              type="button"
+              onclick="openLyricsPage()"
+              title="Loi bai hat"
+            >
+              <i class="bi bi-mic-fill"></i>
+            </button>
+            <button class="btn btn-link text-secondary p-0">
+              <i class="bi bi-view-list"></i>
+            </button>
+            <div
+              class="d-flex align-items-center gap-2 volume-control"
+              style="width: 120px"
+            >
+              <button
+                id="volume-icon"
+                class="btn btn-link text-secondary p-0 m-0"
+              >
+                <i class="bi bi-volume-up-fill"></i>
+              </button>
+              <input
+                type="range"
+                id="volume-bar"
+                class="w-100 player-volume"
+                min="0"
+                max="100"
+                value="80"
+              />
+            </div>
+            <button class="btn btn-link text-secondary p-0">
+              <i class="bi bi-arrows-fullscreen"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/javascript/jsDashBoard.js"></script>
+    <script src="/javascript/jsTheLoai.js"></script>
+    <script src="/javascript/jsLyrics.js"></script>
+  </body>
+</html>

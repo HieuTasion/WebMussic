@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "artist": "Sơn Tùng M-TP",
+    "albumName": "Sky Tour",
+    "description": "Những bản hit đình đám làm nên tên tuổi của Sơn Tùng M-TP.",
+    "bg": "linear-gradient(45deg, #134e48, #0f1717)",
+    "songs": ["Hãy Trao Cho Anh", "Chạy Ngay Đi", "Lạc Trôi", "Nơi Này Có Anh"]
+  },
+  {
+    "id": 2,
+    "artist": "Taylor Swift",
+    "albumName": "Midnights",
+    "description": "Hành trình cảm xúc qua những đêm không ngủ cùng Taylor Swift.",
+    "bg": "linear-gradient(45deg, #4e1313, #0f1717)",
+    "songs": ["Anti-Hero", "Lavender Haze", "Midnight Rain", "Bejeweled"]
+  },
+  {
+    "id": 3,
+    "artist": "Đen Vâu",
+    "albumName": "Lối Nhỏ",
+    "description": "Những câu chuyện đời thường sâu sắc qua rap của Đen.",
+    "bg": "linear-gradient(45deg, #132e4e, #0f1717)",
+    "songs": ["Việc Lớn", "Hai Triệu Năm", "Mang Tiền Về Cho Mẹ", "Trốn Tìm"]
+  }
+]

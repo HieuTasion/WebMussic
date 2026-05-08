@@ -1,0 +1,117 @@
+<div
+  class="fixed-bottom bg-card border-top border-secondary"
+  style="z-index: 1050; height: 100px; background: #111818"
+>
+  <audio id="main-audio">
+    <source id="audio-source" src="" type="audio/mpeg" />
+  </audio>
+
+  <div class="container-fluid h-100 p-0">
+    <div class="row h-100 align-items-center g-0 px-4">
+      <div class="col-3 d-flex align-items-center">
+        <img
+          id="player-img"
+          src="https://picsum.photos/60/60?blur=10"
+          class="rounded shadow-sm me-3"
+          style="
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border: 1px solid #222;
+          "
+        />
+        <div class="text-truncate">
+          <h6 id="player-title" class="mb-1 text-white fw-bold text-truncate">
+            NVNP Music
+          </h6>
+          <p id="player-artist" class="small text-secondary mb-0 text-truncate">
+            Chọn bài hát để phát
+          </p>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="d-flex flex-column align-items-center">
+          <div class="d-flex align-items-center gap-4 mb-2">
+            <button class="btn btn-link text-secondary p-0 fs-5">
+              <i class="bi bi-shuffle"></i>
+            </button>
+            <button class="btn btn-link text-white p-0 fs-4">
+              <i class="bi bi-skip-start-fill"></i>
+            </button>
+
+            <button
+              id="play-pause-btn"
+              class="btn btn-teal rounded-circle d-flex align-items-center justify-content-center shadow"
+              style="width: 50px; height: 50px"
+            >
+              <i class="bi bi-play-fill fs-3 text-dark"></i>
+            </button>
+
+            <button class="btn btn-link text-white p-0 fs-4">
+              <i class="bi bi-skip-end-fill"></i>
+            </button>
+            <button class="btn btn-link text-teal p-0 fs-5">
+              <i class="bi bi-repeat"></i>
+            </button>
+          </div>
+
+          <div class="d-flex align-items-center w-100 gap-2">
+            <span
+              id="current-time"
+              class="small text-secondary"
+              style="font-size: 11px; min-width: 35px; text-align: right"
+              >00:00</span
+            >
+
+            <input
+              type="range"
+              id="progress-bar"
+              class="flex-grow-1 player-progress"
+              min="0"
+              max="100"
+              value="0"
+            />
+
+            <span
+              id="total-duration"
+              class="small text-secondary"
+              style="font-size: 11px; min-width: 35px"
+              >00:00</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="col-3 d-flex align-items-center justify-content-end gap-3">
+        <button class="btn btn-link text-secondary p-0">
+          <i class="bi bi-mic-fill"></i>
+        </button>
+        <button class="btn btn-link text-secondary p-0">
+          <i class="bi bi-view-list"></i>
+        </button>
+
+        <div
+          class="d-flex align-items-center gap-2 volume-control"
+          style="width: 120px"
+        >
+          <button id="volume-icon" class="btn btn-link text-secondary p-0 m-0">
+            <i class="bi bi-volume-up-fill"></i>
+          </button>
+          <input
+            type="range"
+            id="volume-bar"
+            class="w-100 player-volume"
+            min="0"
+            max="100"
+            value="80"
+          />
+        </div>
+
+        <button class="btn btn-link text-secondary p-0">
+          <i class="bi bi-arrows-fullscreen"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

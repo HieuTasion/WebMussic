@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký | NVNP Music</title>
+    <link rel="stylesheet" href="../style/auth.css" />
+    <script src="../javascript/auth.js" defer></script>
+  </head>
+  <body data-page="register">
+    <main class="auth-layout">
+      <section class="auth-showcase auth-showcase-register">
+        <div class="showcase-top">
+          <a class="brand-mark" href="Home.html">NVNP Music</a>
+          <a class="mini-link" href="login.html">Quay lại đăng nhập</a>
+        </div>
+
+        <div class="showcase-copy">
+          <p class="section-tag">Create Account</p>
+          <h1>Tạo tài khoản mới trong vài giây</h1>
+          <p class="showcase-text">
+            Form đăng ký được rút gọn chỉ còn Gmail và mật khẩu để đúng ý bạn và dễ dùng hơn.
+          </p>
+        </div>
+
+        <div class="showcase-panels">
+          <article class="stat-panel stat-panel-highlight">
+            <span class="stat-label">Thành viên hiện có</span>
+            <strong id="registered-count">0</strong>
+            <span class="stat-meta">Lưu trong localStorage</span>
+          </article>
+          <article class="stat-panel">
+            <span class="stat-label">Thiết lập</span>
+            <strong>2 bước</strong>
+            <span class="stat-meta">Email và mật khẩu</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="auth-panel">
+        <div class="panel-head">
+          <p class="section-tag">Đăng ký</p>
+          <h2>Tạo tài khoản mới</h2>
+          <p class="panel-text">Chỉ cần Gmail và mật khẩu để bắt đầu.</p>
+        </div>
+
+        <form id="register-form" class="auth-form" novalidate>
+          <label class="field">
+            <span>Gmail</span>
+            <input type="email" id="register-email" placeholder="yourname@gmail.com" autocomplete="email" required />
+          </label>
+
+          <label class="field">
+            <span>Mật khẩu</span>
+            <input type="password" id="register-password" placeholder="Ít nhất 6 ký tự" autocomplete="new-password" required />
+          </label>
+
+          <button type="submit" class="primary-btn">Tạo tài khoản</button>
+          <p class="form-note" id="register-message"></p>
+        </form>
+
+        <div class="panel-foot">
+          <span>Muốn xem dữ liệu đã lưu?</span>
+          <a class="accent-link" href="users.html">Danh sách tài khoản</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

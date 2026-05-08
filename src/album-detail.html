@@ -1,0 +1,144 @@
+<div
+  class="album-page-wrapper"
+  style="padding-bottom: 120px; animation: fadeIn 0.5s ease"
+>
+  <button
+    class="btn-back"
+    onclick="loadPage('Home.html')"
+    style="
+      margin: 20px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 30px;
+    "
+  >
+    <i class="bi bi-chevron-left"></i> Quay lại
+  </button>
+
+  <div
+    id="header-content"
+    class="album-header d-flex align-items-end p-4"
+    style="min-height: 300px; gap: 30px"
+  ></div>
+
+  <div class="px-4 mb-4">
+    <button
+      class="play-btn-large btn-teal"
+      style="
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: none;
+        font-size: 24px;
+      "
+    >
+      <i class="bi bi-play-fill"></i>
+    </button>
+  </div>
+
+  <div class="container-fluid px-4">
+    <table
+      class="song-table w-100"
+      style="border-collapse: separate; border-spacing: 0 10px"
+    >
+      <thead>
+        <tr class="text-secondary border-bottom border-secondary">
+          <th style="width: 50px" class="pb-2">#</th>
+          <th class="pb-2">Tiêu đề</th>
+          <th class="d-none d-md-table-cell pb-2">Lượt thích</th>
+          <th class="pb-2"><i class="bi bi-clock"></i></th>
+        </tr>
+      </thead>
+      <tbody id="list-songs">
+        <tr>
+          <td colspan="4" class="text-center py-5">
+            Đang tải danh sách bài hát...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+
+
+
+  (async function initAlbum() {
+    const albumId = localStorage.getItem("selectedAlbumId");
+    if (!albumId) return;
+
+    try {
+      // 1. Lấy thông tin Album từ file JSON nội bộ
+      const resAlbum = await fetch("albums.json");
+      const albums = await resAlbum.json();
+      const album = albums.find((a) => a.id == albumId);
+
+      // 2. Lấy dữ liệu bài hát từ MockAPI
+      const resSongs = await fetch(
+        "https://68ef6d3fb06cc802829d58ca.mockapi.io/songs",
+      );
+      const allSongs = await resSongs.json();
+
+      // 3. LỌC: Chỉ lấy bài hát có Artist khớp với Artist của Album
+      const filteredSongs = allSongs.filter((s) => s.Artist === album.artist);
+
+      if (album) {
+        // Đổ dữ liệu vào Header
+        const header = document.getElementById("header-content");
+        header.style.background = `linear-gradient(to bottom, ${album.bg || "#134e48"}, #0f1717)`;
+        header.innerHTML = `
+                    <img src="https://picsum.photos/300/300?random=${album.id}" 
+                         class="album-img shadow-lg" 
+                         style="width: 230px; height: 230px; object-fit: cover; border-radius: 12px;">
+                    <div class="text-white">
+                        <p class="small fw-bold mb-1">ALBUM</p>
+                        <h1 class="display-2 fw-bold mb-2">${album.albumName}</h1>
+                        <p class="mb-0"><strong>${album.artist}</strong> • ${filteredSongs.length} bài hát</p>
+                    </div>
+                `;
+
+        // Đổ dữ liệu vào danh sách bài hát
+        const listSongs = document.getElementById("list-songs");
+        if (filteredSongs.length === 0) {
+          listSongs.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-secondary">Nghệ sĩ này chưa có bài hát nào trên hệ thống.</td></tr>`;
+          return;
+        }
+
+        listSongs.innerHTML = filteredSongs
+          .map(
+            (song, index) => `
+                    <tr class="song-item text-white" 
+                        style="cursor: pointer; transition: background 0.3s;"
+                        onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
+                        onmouseout="this.style.background='transparent'"
+                        onclick="playThisSong('${song.Url}', '${song.Name.replace(/'/g, "\\'")}', '${song.Artist.replace(/'/g, "\\'")}', '${song.Img}')">
+                        
+                        <td class="p-3 text-secondary">${index + 1}</td>
+                        <td class="p-3">
+                            <div class="d-flex align-items-center">
+                                <img src="${song.Img}" class="rounded me-3" style="width: 45px; height: 45px; object-fit: cover;">
+                                <div>
+                                    <div class="fw-bold">${song.Name}</div>
+                                    <div class="small text-secondary">${song.Artist}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-3 text-secondary d-none d-md-table-cell">
+                            <i class="bi bi-heart-fill text-teal me-1"></i> ${song.Likes || 0}
+                        </td>
+                        <td class="p-3 text-secondary">${song.Times || "3:45"}</td>
+                    </tr>
+                `,
+          )
+          .join("");
+      }
+    } catch (e) {
+      console.error("Lỗi load album:", e);
+      document.getElementById("list-songs").innerHTML =
+        `<tr><td colspan="4" class="text-danger text-center py-5">Không thể kết nối dữ liệu API.</td></tr>`;
+    }
+  })();
+</script>

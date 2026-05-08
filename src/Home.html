@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang Chu - Harmonix Music</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --pink-primary: #FF6B6B;
+        --pink-light: #FF8E8E;
+        --pink-dark: #ee5a5a;
+        --pink-soft: #FFB6B6;
+        --bg: #f5e6e8;
+        --card-bg: #ffffff;
+        --card-hover: #fff5f8;
+        --text-dark: #1a1a2e;
+        --text-gray: #6b4c5a;
+      }
+
+      body {
+        background-color: var(--bg);
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        color: var(--text-dark);
+        font-family: "Inter", sans-serif;
+      }
+
+      .main-content-scroll {
+        flex: 1;
+        height: 100vh;
+        overflow-y: auto;
+        padding-bottom: 100px;
+      }
+
+      .main-content-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .main-content-scroll::-webkit-scrollbar-track {
+        background: #e6d6da;
+        border-radius: 10px;
+      }
+
+      .main-content-scroll::-webkit-scrollbar-thumb {
+        background: var(--pink-primary);
+        border-radius: 10px;
+      }
+
+      .main-content-scroll::-webkit-scrollbar-thumb:hover {
+        background: var(--pink-light);
+      }
+
+      .text-teal {
+        color: var(--pink-primary) !important;
+      }
+
+      .bg-teal {
+        background-color: var(--pink-primary) !important;
+      }
+
+      .hero-section {
+        background: linear-gradient(135deg, #ffffff, #fff0f5);
+        border-radius: 24px;
+        padding: 40px;
+        border: 1px solid rgba(255, 107, 107, 0.2);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .album-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 107, 107, 0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      }
+
+      .album-card:hover {
+        transform: translateY(-5px);
+        background: var(--card-hover);
+        border-color: var(--pink-primary);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.1);
+      }
+
+      .featured-card {
+        background: #ffffff;
+        border: 1px solid rgba(255, 107, 107, 0.15);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      }
+
+      .featured-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--pink-primary);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.12);
+      }
+
+      .featured-card:hover .bi-play-circle-fill {
+        color: var(--pink-primary) !important;
+        transform: scale(1.1);
+        transition: all 0.3s;
+      }
+
+      .bi-play-circle-fill {
+        transition: all 0.3s;
+        color: var(--pink-primary) !important;
+      }
+
+      /* List Group Item */
+      .list-group-item {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(255, 107, 107, 0.15) !important;
+        transition: all 0.3s ease;
+        color: var(--text-dark) !important;
+      }
+
+      .list-group-item:hover {
+        background: rgba(255, 107, 107, 0.05) !important;
+        padding-left: 10px !important;
+      }
+
+      /* Text colors */
+      h2, h3, h4, h5, h6 {
+        color: var(--text-dark) !important;
+      }
+
+      .text-secondary {
+        color: var(--text-gray) !important;
+      }
+
+      .text-white {
+        color: var(--text-dark) !important;
+      }
+
+      .small.text-secondary {
+        color: var(--text-gray) !important;
+      }
+
+      /* Nút play */
+      .btn-play {
+        background: var(--pink-primary);
+        border: none;
+        color: white;
+        transition: all 0.3s;
+      }
+
+      .btn-play:hover {
+        background: var(--pink-light);
+        transform: scale(1.05);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero-section {
+          padding: 25px;
+        }
+        
+        h2 {
+          font-size: 1.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-content-scroll">
+      <div class="container-fluid py-4 px-4">
+        <div
+          class="hero-section mb-5 shadow-lg"
+          id="hero-slider"
+          style="transition: background 0.8s ease; cursor: pointer"
+        >
+          <div id="hero-content" style="transition: opacity 0.5s ease"></div>
+        </div>
+
+        <div id="songs-container" class="mt-4 d-none">
+          <h3 id="current-album-title" class="text-teal mb-3">
+            Danh sách bài hát
+          </h3>
+          <ul
+            id="song-list"
+            class="list-group list-group-flush bg-transparent"
+          ></ul>
+        </div>
+
+        <div class="mb-5">
+          <h2 class="h4 fw-bold mb-4">✨ Gợi ý cho bạn</h2>
+          <div class="row g-4">
+            <div class="col-12 col-md-6 col-lg-4">
+              <div
+                class="card featured-card shadow"
+                style="cursor: pointer"
+                onclick="openAlbum(1)"
+              >
+                <div class="row g-0 align-items-center">
+                  <div class="col-4">
+                    <img
+                      src="https://picsum.photos/200/200?random=11"
+                      class="img-fluid rounded-start"
+                    />
+                  </div>
+                  <div class="col-8 px-3">
+                    <h6 class="text-teal mb-1 text-truncate">Son Tung M-TP</h6>
+                    <p class="small text-secondary mb-2">Sky Tour</p>
+                    <i class="bi bi-play-circle-fill fs-3"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+              <div
+                class="card featured-card shadow"
+                style="cursor: pointer"
+                onclick="openAlbum(2)"
+              >
+                <div class="row g-0 align-items-center">
+                  <div class="col-4">
+                    <img
+                      src="https://picsum.photos/200/200?random=12"
+                      class="img-fluid rounded-start"
+                    />
+                  </div>
+                  <div class="col-8 px-3">
+                    <h6 class="text-teal mb-1 text-truncate">Taylor Swift</h6>
+                    <p class="small text-secondary mb-2">Midnights</p>
+                    <i class="bi bi-play-circle-fill fs-3"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 d-none d-lg-block">
+              <div
+                class="card featured-card shadow"
+                style="cursor: pointer"
+                onclick="openAlbum(3)"
+              >
+                <div class="row g-0 align-items-center">
+                  <div class="col-4">
+                    <img
+                      src="https://picsum.photos/200/200?random=13"
+                      class="img-fluid rounded-start"
+                    />
+                  </div>
+                  <div class="col-8 px-3">
+                    <h6 class="text-teal mb-1 text-truncate">Den Vâu</h6>
+                    <p class="small text-secondary mb-2">Lối Nhỏ</p>
+                    <i class="bi bi-play-circle-fill fs-3"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="h4 fw-bold mb-4">🔥 Bảng xếp hạng nhạc hot</h2>
+          <div
+            id="hot-songs-list"
+            class="list-group list-group-flush bg-transparent"
+          >
+            <div class="text-secondary">🎵 Đang tải danh sách nhạc...</div>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <div class="section-header mb-4">
+            <h2><i class="bi bi-bar-chart-line-fill"></i> Top 6 thể loại hot nhất</h2>
+            <span class="view-all">Theo số bài và lượt thích</span>
+          </div>
+          <div class="trending-grid" id="top-genres-grid">
+            <div class="text-secondary">Đang tải thể loại...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
