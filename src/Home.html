@@ -78,6 +78,133 @@
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
       }
 
+      .home-search-shell {
+        margin-top: 24px;
+        display: grid;
+        gap: 16px;
+      }
+
+      .home-search-input {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 107, 107, 0.22);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.08);
+      }
+
+      .home-search-input i {
+        color: var(--pink-primary);
+        font-size: 1rem;
+      }
+
+      .home-search-input input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--text-dark);
+        font-size: 1rem;
+      }
+
+      .home-search-results {
+        display: grid;
+        gap: 10px;
+        max-height: 320px;
+        overflow-y: auto;
+      }
+
+      .home-search-item {
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 14px;
+        border: none;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--text-dark);
+        cursor: pointer;
+        text-align: left;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .home-search-item:hover,
+      .home-search-item.active {
+        transform: translateY(-2px);
+        background: #fff5f8;
+        box-shadow: 0 12px 28px rgba(255, 107, 107, 0.12);
+      }
+
+      .home-search-item img {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 16px;
+      }
+
+      .home-search-item strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text-dark);
+      }
+
+      .home-search-item span {
+        color: var(--text-gray);
+        font-size: 0.92rem;
+      }
+
+      .home-search-hint {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.68);
+        color: var(--text-gray);
+      }
+
+      .home-selected-song {
+        display: none;
+        grid-template-columns: 84px minmax(0, 1fr) auto;
+        gap: 16px;
+        align-items: center;
+        padding: 16px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #fff8fa, #ffffff);
+        border: 1px solid rgba(255, 107, 107, 0.18);
+        box-shadow: 0 14px 36px rgba(255, 107, 107, 0.08);
+      }
+
+      .home-selected-song.is-visible {
+        display: grid;
+      }
+
+      .home-selected-song img {
+        width: 84px;
+        height: 84px;
+        object-fit: cover;
+        border-radius: 20px;
+      }
+
+      .home-selected-song h4 {
+        margin: 0 0 6px;
+      }
+
+      .home-selected-song p {
+        margin: 0;
+        color: var(--text-gray);
+      }
+
+      .home-selected-song button {
+        border: none;
+        border-radius: 999px;
+        padding: 12px 18px;
+        background: var(--pink-primary);
+        color: #fff;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
       .album-card {
         background: var(--card-bg);
         border: 1px solid rgba(255, 107, 107, 0.15);
@@ -184,6 +311,23 @@
           style="transition: background 0.8s ease; cursor: pointer"
         >
           <div id="hero-content" style="transition: opacity 0.5s ease"></div>
+          <div class="home-search-shell">
+            <div class="home-search-input">
+              <i class="bi bi-search"></i>
+              <input
+                id="dashboard-song-search"
+                type="text"
+                placeholder="Gõ tên bài hát hoặc ca sĩ để tìm nhanh..."
+                autocomplete="off"
+              />
+            </div>
+            <div id="dashboard-selected-song" class="home-selected-song"></div>
+            <div id="dashboard-search-results" class="home-search-results">
+              <div class="home-search-hint">
+                Gõ từng ký tự để hiện danh sách bài hát.
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="songs-container" class="mt-4 d-none">

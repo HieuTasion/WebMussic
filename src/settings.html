@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cai dat | Harmonix</title>
+    <link rel="stylesheet" href="../style/settings.css" />
+    <script src="../javascript/settings.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+  </head>
+  <body>
+    <main class="settings-page">
+      <section class="settings-shell">
+        <div class="page-top">
+          <div>
+          
+            <h1>Cai dat co ban</h1>
+            <p>Gon, de dung va dong bo visual voi dashboard.</p>
+          </div>
+          <div class="top-actions">
+            <a href="DashBoard.html" class="ghost-btn">
+              <i class="bi bi-arrow-left"></i>
+              Dashboard
+            </a>
+            <a href="profile.html" class="ghost-btn">
+              <i class="bi bi-person"></i>
+              Ho so
+            </a>
+          </div>
+        </div>
+
+        <section class="settings-hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Preferences</p>
+            <h2>Tuy chinh nhanh cho tai khoan hien tai</h2>
+            <p id="settings-user-email" class="hero-note">
+              Dang dung che do mac dinh.
+            </p>
+          </div>
+          <div class="hero-pills">
+            <div class="hero-pill">
+              <span>Sidebar</span>
+              <strong>Midnight + Teal</strong>
+            </div>
+            <div class="hero-pill">
+              <span>Player volume</span>
+              <strong id="settings-volume-label">80%</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Tai khoan</p>
+                <h3>Thong tin hien thi</h3>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Ten hien thi</span>
+              <input id="settings-display-name" type="text" placeholder="Nhap ten hien thi" />
+            </label>
+
+            <label class="field">
+              <span>Email</span>
+              <input id="settings-email" type="email" disabled />
+            </label>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Giao dien</p>
+                <h3>Tuy chon nho</h3>
+              </div>
+            </div>
+
+            <label class="toggle-row">
+              <div>
+                <strong>Hieu ung neon nhe</strong>
+                <p>Giu lai do sang accent nhu dashboard.</p>
+              </div>
+              <input id="settings-neon" type="checkbox" checked />
+            </label>
+
+            <label class="toggle-row">
+              <div>
+                <strong>Compact cards</strong>
+                <p>Thu gon khoang cach cho layout basic hon.</p>
+              </div>
+              <input id="settings-compact" type="checkbox" />
+            </label>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Am thanh</p>
+                <h3>Mac dinh player</h3>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Am luong mac dinh</span>
+              <input id="settings-volume" type="range" min="0" max="100" value="80" />
+            </label>
+
+            <label class="toggle-row">
+              <div>
+                <strong>Tu dong mo lyrics</strong>
+                <p>Mo trang loi bai hat nhanh hon khi dang nghe.</p>
+              </div>
+              <input id="settings-auto-lyrics" type="checkbox" />
+            </label>
+          </article>
+
+          <article class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Thong bao</p>
+                <h3>Trang thai va thao tac nhanh</h3>
+              </div>
+              <button id="settings-save" class="primary-btn" type="button">
+                Luu cai dat
+              </button>
+            </div>
+
+            <div class="quick-actions">
+              <label class="toggle-card">
+                <input id="settings-notify" type="checkbox" checked />
+                <div>
+                  <strong>Thong bao khi luu bai hat</strong>
+                  <p>Phu hop cho flow yeu thich va recently played.</p>
+                </div>
+              </label>
+
+              <label class="toggle-card">
+                <input id="settings-remember-view" type="checkbox" checked />
+                <div>
+                  <strong>Nho trang vua mo</strong>
+                  <p>Giup quay lai dung man hinh ban dang nghe.</p>
+                </div>
+              </label>
+
+              <a class="link-card" href="users.html">
+                <i class="bi bi-people"></i>
+                <div>
+                  <strong>Quan ly danh sach user</strong>
+                  <p>Mo nhanh trang danh sach dang ky.</p>
+                </div>
+              </a>
+            </div>
+
+            <p id="settings-feedback" class="feedback" aria-live="polite"></p>
+          </article>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

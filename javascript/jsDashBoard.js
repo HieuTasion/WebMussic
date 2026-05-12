@@ -2,13 +2,15 @@ let albumData = [];
 let currentIndex = 0;
 let slideInterval = null;
 let isPlaying = false;
-let isShuffleEnabled = false;
+window.isShuffleEnabled = false;
 
 let songLibraryCache = [];
 let songLibraryPromise = null;
 let currentQueue = [];
 let currentQueueIndex = -1;
 let currentSongMeta = null;
+let dashboardSearchSelectedSong = null;
+let playerAutoAdvanceLock = false;
 let favoriteSongs = loadFavoriteSongs();
 const RECENTLY_PLAYED_LIMIT = 25;
 const LYRICS_SNAPSHOT_KEY = "harmonix_lyrics_snapshot";
@@ -37,6 +39,7 @@ let volumeBar;
 let volumeIcon;
 
 document.addEventListener("DOMContentLoaded", () => {
+  tidyDashboardSystemMenu();
   initPlayerControls();
   loadPage("Home.html");
 });
@@ -88,6 +91,22 @@ window.toggleMenu = function (menuId, element) {
   }
 };
 
+function tidyDashboardSystemMenu() {
+  const settingsMenu = document.getElementById("menu-caidat");
+  if (!settingsMenu) return;
+
+  const items = Array.from(settingsMenu.querySelectorAll(".menu-item"));
+  const legacyItem = items.find(
+    (item) =>
+      !item.getAttribute("onclick") &&
+      normalizeText(repairMojibake(item.textContent || "")).includes("cai dat"),
+  );
+
+  if (legacyItem) {
+    legacyItem.remove();
+  }
+}
+
 function initPlayerControls() {
   audio = document.getElementById("main-audio");
   playPauseBtn = document.getElementById("play-pause-btn");
@@ -124,52 +143,46 @@ function initPlayerControls() {
 
   if (shuffleBtn) {
     shuffleBtn.onclick = () => {
-      isShuffleEnabled = !isShuffleEnabled;
-      shuffleBtn.classList.toggle("text-teal", isShuffleEnabled);
-      shuffleBtn.classList.toggle("text-secondary", !isShuffleEnabled);
+      window.isShuffleEnabled = !window.isShuffleEnabled;
+      shuffleBtn.classList.toggle("text-teal", window.isShuffleEnabled);
+      shuffleBtn.classList.toggle("text-secondary", !window.isShuffleEnabled);
     };
   }
 
   if (prevBtn) {
-    prevBtn.onclick = () => playPreviousSong();
+    prevBtn.onclick = () => window.playPreviousSong();
   }
 
   if (nextBtn) {
-    nextBtn.onclick = () => playNextSong();
+    nextBtn.onclick = () => window.playNextSong();
   }
 
   if (favoriteBtn) {
-    favoriteBtn.onclick = () => toggleFavoriteCurrentSong();
+    favoriteBtn.onclick = () => window.toggleFavoriteCurrentSong();
   }
 
   audio.ontimeupdate = () => {
-    const current = document.getElementById("current-time");
-    const total = document.getElementById("total-duration");
-    const progress = document.getElementById("progress-bar");
-
-    if (!audio.duration) return;
-
-    if (progress) {
-      progress.value = (audio.currentTime / audio.duration) * 100;
-    }
-
-    if (current) current.innerText = formatTime(audio.currentTime);
-    if (total) total.innerText = formatTime(audio.duration);
+    syncPlayerDurationUI(audio);
+    maybeAdvanceSongAtExpectedEnd(audio);
   };
 
   audio.onloadedmetadata = () => {
-    const total = document.getElementById("total-duration");
-    if (total) total.innerText = formatTime(audio.duration);
+    playerAutoAdvanceLock = false;
+    syncPlayerDurationUI(audio);
   };
 
   audio.onended = () => {
-    playNextSong();
+    if (!playerAutoAdvanceLock) {
+      playerAutoAdvanceLock = true;
+      window.playNextSong();
+    }
   };
 
   if (progressBar) {
     progressBar.oninput = () => {
-      if (!audio.duration) return;
-      audio.currentTime = (progressBar.value / 100) * audio.duration;
+      const effectiveDuration = getPreferredSongDuration(currentSongMeta, audio);
+      if (!effectiveDuration) return;
+      audio.currentTime = (progressBar.value / 100) * effectiveDuration;
     };
   }
 
@@ -322,14 +335,14 @@ function getFavoriteSongIndex(song) {
   return favoriteSongs.findIndex((item) => normalizeSongKey(item) === key);
 }
 
-function isSongFavorite(song) {
+window.isSongFavorite = function (song) {
   return getFavoriteSongIndex(song) !== -1;
-}
+};
 
 function setFavoriteButtonState(song) {
   if (!favoriteBtn) return;
 
-  const favorite = isSongFavorite(song);
+  const favorite = window.isSongFavorite(song);
   favoriteBtn.classList.toggle("text-danger", favorite);
   favoriteBtn.classList.toggle("text-secondary", !favorite);
   favoriteBtn.innerHTML = favorite
@@ -338,7 +351,7 @@ function setFavoriteButtonState(song) {
   favoriteBtn.title = favorite ? "Bỏ khỏi yêu thích" : "Thêm vào yêu thích";
 }
 
-function toggleFavoriteCurrentSong() {
+window.toggleFavoriteCurrentSong = function () {
   if (!currentSongMeta) return;
 
   const existingIndex = getFavoriteSongIndex(currentSongMeta);
@@ -350,7 +363,7 @@ function toggleFavoriteCurrentSong() {
 
   saveFavoriteSongs();
   setFavoriteButtonState(currentSongMeta);
-}
+};
 
 function setCurrentQueue(queue, index) {
   if (!Array.isArray(queue) || queue.length === 0) {
@@ -380,10 +393,10 @@ function playSongFromQueue(index) {
   );
 }
 
-function playNextSong() {
+window.playNextSong = function () {
   if (!currentQueue.length) return;
 
-  if (isShuffleEnabled && currentQueue.length > 1) {
+  if (window.isShuffleEnabled && currentQueue.length > 1) {
     let randomIndex = currentQueueIndex;
     while (randomIndex === currentQueueIndex) {
       randomIndex = Math.floor(Math.random() * currentQueue.length);
@@ -393,12 +406,12 @@ function playNextSong() {
   }
 
   playSongFromQueue(currentQueueIndex + 1);
-}
+};
 
-function playPreviousSong() {
+window.playPreviousSong = function () {
   if (!currentQueue.length) return;
   playSongFromQueue(currentQueueIndex - 1);
-}
+};
 
 async function getAllSongs() {
   if (songLibraryCache.length) return songLibraryCache;
@@ -438,6 +451,68 @@ function formatTime(seconds) {
   return `${min.toString().padStart(2, "0")}:${sec
     .toString()
     .padStart(2, "0")}`;
+}
+
+function parseSongTimeToSeconds(timeText) {
+  const value = String(timeText || "").trim();
+  if (!value) return null;
+
+  const parts = value.split(":").map((part) => Number(part));
+  if (parts.some((part) => !Number.isFinite(part))) return null;
+
+  if (parts.length === 2) {
+    return parts[0] * 60 + parts[1];
+  }
+
+  if (parts.length === 3) {
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  }
+
+  return null;
+}
+
+function getPreferredSongDuration(song = currentSongMeta, player = audio) {
+  const songDuration = parseSongTimeToSeconds(song?.Times);
+  if (Number.isFinite(songDuration) && songDuration > 0) {
+    return songDuration;
+  }
+
+  const audioDuration = Number(player?.duration);
+  if (Number.isFinite(audioDuration) && audioDuration > 0) {
+    return audioDuration;
+  }
+
+  return 0;
+}
+
+function syncPlayerDurationUI(player = audio) {
+  const current = document.getElementById("current-time");
+  const total = document.getElementById("total-duration");
+  const progress = document.getElementById("progress-bar");
+  const effectiveDuration = getPreferredSongDuration(currentSongMeta, player);
+
+  if (!player || !effectiveDuration) return;
+
+  const clampedCurrentTime = Math.min(player.currentTime || 0, effectiveDuration);
+
+  if (progress) {
+    progress.value = (clampedCurrentTime / effectiveDuration) * 100;
+  }
+
+  if (current) current.innerText = formatTime(clampedCurrentTime);
+  if (total) total.innerText = formatTime(effectiveDuration);
+}
+
+function maybeAdvanceSongAtExpectedEnd(player = audio) {
+  const effectiveDuration = getPreferredSongDuration(currentSongMeta, player);
+  if (!player || !effectiveDuration || playerAutoAdvanceLock) return;
+
+  if (player.currentTime >= effectiveDuration - 0.15) {
+    playerAutoAdvanceLock = true;
+    player.currentTime = effectiveDuration;
+    syncPlayerDurationUI(player);
+    window.playNextSong();
+  }
 }
 
 function repairMojibake(value) {
@@ -573,6 +648,137 @@ function getLyricsPreview(song, maxLength = 90) {
   return `${lyrics.slice(0, maxLength).trimEnd()}...`;
 }
 
+function renderDashboardSearchHint(message) {
+  const results = document.getElementById("dashboard-search-results");
+  if (!results) return;
+
+  results.innerHTML = `<div class="home-search-hint">${escapeHtml(message)}</div>`;
+}
+
+function renderDashboardSelectedSong(song) {
+  const card = document.getElementById("dashboard-selected-song");
+  if (!card) return;
+
+  if (!song) {
+    card.classList.remove("is-visible");
+    card.innerHTML = "";
+    return;
+  }
+
+  card.classList.add("is-visible");
+  card.innerHTML = `
+    <img src="${song.Img}" alt="${escapeHtml(song.Name)}" onerror="this.src='https://picsum.photos/120/120'">
+    <div>
+      <h4>${escapeHtml(song.Name || "Chua co ten bai hat")}</h4>
+      <p>${escapeHtml(song.Artist || "Dang cap nhat nghe si")}</p>
+      <p>${escapeHtml(song.Times || getLyricsPreview(song, 64))}</p>
+    </div>
+    <button type="button" id="dashboard-play-selected-song">Phat nhac</button>
+  `;
+
+  const playBtn = document.getElementById("dashboard-play-selected-song");
+  if (playBtn) {
+    playBtn.onclick = () => {
+      const songs = songLibraryCache.length ? songLibraryCache : [song];
+      const index = songs.findIndex(
+        (item) =>
+          item.Url === song.Url || normalizeSongKey(item) === normalizeSongKey(song),
+      );
+
+      playThisSong(
+        song.Url,
+        song.Name,
+        song.Artist,
+        song.Img,
+        index !== -1 ? songs : [song],
+        index !== -1 ? index : 0,
+      );
+    };
+  }
+}
+
+function renderDashboardSearchResults(songs, keyword = "") {
+  const results = document.getElementById("dashboard-search-results");
+  if (!results) return;
+
+  if (!keyword.trim()) {
+    renderDashboardSearchHint("Go tung ky tu de hien danh sach bai hat.");
+    return;
+  }
+
+  if (!songs.length) {
+    renderDashboardSearchHint("Khong tim thay bai hat phu hop.");
+    return;
+  }
+
+  results.innerHTML = songs
+    .map(
+      (song, index) => `
+        <button
+          type="button"
+          class="home-search-item ${
+            dashboardSearchSelectedSong &&
+            normalizeSongKey(dashboardSearchSelectedSong) ===
+              normalizeSongKey(song)
+              ? "active"
+              : ""
+          }"
+          data-search-index="${index}"
+        >
+          <img src="${song.Img}" alt="${escapeHtml(song.Name)}" onerror="this.src='https://picsum.photos/80/80'">
+          <span>
+            <strong>${escapeHtml(song.Name || "Chua co ten")}</strong>
+            <span>${escapeHtml(song.Artist || "Dang cap nhat nghe si")}</span>
+          </span>
+          <span>${escapeHtml(song.Times || "")}</span>
+        </button>
+      `,
+    )
+    .join("");
+
+  Array.from(results.querySelectorAll(".home-search-item")).forEach((item) => {
+    item.onclick = () => {
+      const index = Number(item.dataset.searchIndex);
+      const selectedSong = songs[index];
+      if (!selectedSong) return;
+
+      dashboardSearchSelectedSong = selectedSong;
+      renderDashboardSelectedSong(selectedSong);
+      renderDashboardSearchResults(songs, keyword);
+    };
+  });
+}
+
+async function initDashboardSongSearch() {
+  const input = document.getElementById("dashboard-song-search");
+  if (!input) return;
+
+  await getAllSongs();
+
+  dashboardSearchSelectedSong = currentSongMeta || null;
+  renderDashboardSelectedSong(dashboardSearchSelectedSong);
+  renderDashboardSearchHint("Go tung ky tu de hien danh sach bai hat.");
+
+  input.oninput = () => {
+    const keyword = normalizeText(repairMojibake(input.value));
+
+    if (!keyword) {
+      renderDashboardSearchResults([], "");
+      return;
+    }
+
+    const matchedSongs = songLibraryCache
+      .filter((song) => {
+        const songName = normalizeText(repairMojibake(song.Name));
+        const artistName = normalizeText(repairMojibake(song.Artist));
+        return songName.includes(keyword) || artistName.includes(keyword);
+      })
+      .slice(0, 8);
+
+    renderDashboardSearchResults(matchedSongs, input.value);
+  };
+}
+
 function detectMoodByGenre(name) {
   const normalized = String(name || "").toLowerCase();
   if (normalized.includes("pop")) return "vui-tuoi";
@@ -685,6 +891,12 @@ window.playThisSong = function (
     }),
   );
 
+  const selectedCard = document.getElementById("dashboard-selected-song");
+  if (selectedCard) {
+    dashboardSearchSelectedSong = currentSongMeta;
+    renderDashboardSelectedSong(currentSongMeta);
+  }
+
   const contentArea = document.getElementById("main-content");
   if (
     contentArea &&
@@ -711,26 +923,31 @@ window.playThisSong = function (
   }
 
   const playerAudio = allAudio[0];
+  playerAutoAdvanceLock = false;
   playerAudio.src = url;
+  const preferredDuration = getPreferredSongDuration(currentSongMeta, playerAudio);
+  allTotalTimes.forEach((el) => {
+    el.innerText = formatTime(preferredDuration);
+  });
 
   playerAudio.ontimeupdate = () => {
-    const currentTxt = document.getElementById("current-time");
-    const progBar = document.getElementById("progress-bar");
-
-    if (!playerAudio.duration) return;
-
-    if (currentTxt) {
-      currentTxt.innerText = formatTime(playerAudio.currentTime);
-    }
-    if (progBar) {
-      progBar.value = (playerAudio.currentTime / playerAudio.duration) * 100;
-    }
+    syncPlayerDurationUI(playerAudio);
+    maybeAdvanceSongAtExpectedEnd(playerAudio);
   };
 
   playerAudio.onloadedmetadata = () => {
+    playerAutoAdvanceLock = false;
+    const effectiveDuration = getPreferredSongDuration(currentSongMeta, playerAudio);
     allTotalTimes.forEach((el) => {
-      el.innerText = formatTime(playerAudio.duration);
+      el.innerText = formatTime(effectiveDuration);
     });
+  };
+
+  playerAudio.onended = () => {
+    if (!playerAutoAdvanceLock) {
+      playerAutoAdvanceLock = true;
+      window.playNextSong();
+    }
   };
 
   playerAudio.load();
@@ -1096,6 +1313,7 @@ window.loadPage = function (pageUrl) {
         initAlbumSlider();
         loadHotSongs();
         loadTopGenres();
+        initDashboardSongSearch();
       }
 
       if (
