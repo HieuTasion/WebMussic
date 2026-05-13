@@ -19,22 +19,11 @@
           <p class="section-tag">Create Account</p>
           <h1>Tạo tài khoản mới trong vài giây</h1>
           <p class="showcase-text">
-            Form đăng ký được rút gọn chỉ còn Gmail và mật khẩu để đúng ý bạn và dễ dùng hơn.
+            Form đăng ký được rút gọn chỉ còn Gmail và mật khẩu để đúng ý bạn
+            và dễ dùng hơn.
           </p>
         </div>
 
-        <div class="showcase-panels">
-          <article class="stat-panel stat-panel-highlight">
-            <span class="stat-label">Thành viên hiện có</span>
-            <strong id="registered-count">0</strong>
-            <span class="stat-meta">Lưu trong localStorage</span>
-          </article>
-          <article class="stat-panel">
-            <span class="stat-label">Thiết lập</span>
-            <strong>2 bước</strong>
-            <span class="stat-meta">Email và mật khẩu</span>
-          </article>
-        </div>
       </section>
 
       <section class="auth-panel">
@@ -46,13 +35,25 @@
 
         <form id="register-form" class="auth-form" novalidate>
           <label class="field">
-            <span>Gmail</span>
-            <input type="email" id="register-email" placeholder="yourname@gmail.com" autocomplete="email" required />
+            <span>Tên hoặc Email</span>
+            <input
+              type="text"
+              id="register-email"
+              placeholder="Nhập tên hoặc email"
+              autocomplete="email"
+              required
+            />
           </label>
 
           <label class="field">
             <span>Mật khẩu</span>
-            <input type="password" id="register-password" placeholder="Ít nhất 6 ký tự" autocomplete="new-password" required />
+            <input
+              type="password"
+              id="register-password"
+              placeholder="Ít nhất 6 ký tự"
+              autocomplete="new-password"
+              required
+            />
           </label>
 
           <button type="submit" class="primary-btn">Tạo tài khoản</button>
@@ -60,8 +61,8 @@
         </form>
 
         <div class="panel-foot">
-          <span>Muốn xem dữ liệu đã lưu?</span>
-          <a class="accent-link" href="users.html">Danh sách tài khoản</a>
+          <span>Đã có tài khoản?</span>
+          <a class="accent-link" href="login.html">Đăng nhập ngay</a>
         </div>
       </section>
     </main>

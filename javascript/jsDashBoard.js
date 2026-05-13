@@ -12,6 +12,7 @@ let currentSongMeta = null;
 let dashboardSearchSelectedSong = null;
 let playerAutoAdvanceLock = false;
 let favoriteSongs = loadFavoriteSongs();
+const CURRENT_USER_KEY = "harmonix_current_user";
 const RECENTLY_PLAYED_LIMIT = 25;
 const LYRICS_SNAPSHOT_KEY = "harmonix_lyrics_snapshot";
 const LYRICS_FIELD_CANDIDATES = [
@@ -40,9 +41,42 @@ let volumeIcon;
 
 document.addEventListener("DOMContentLoaded", () => {
   tidyDashboardSystemMenu();
+  syncProtectedLibraryMenuState();
   initPlayerControls();
   loadPage("Home.html");
 });
+
+function getCurrentUser() {
+  try {
+    const raw = localStorage.getItem(CURRENT_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function requireLoggedInAccess() {
+  const user = getCurrentUser();
+  if (user) return true;
+
+  alert("Bạn cần đăng nhập để xem Nghe gần đây và Nhạc yêu thích.");
+  window.location.href = "login.html";
+  return false;
+}
+
+function syncProtectedLibraryMenuState() {
+  const hasUser = Boolean(getCurrentUser());
+  document
+    .querySelectorAll("[data-requires-login='true']")
+    .forEach((item) => {
+      item.classList.toggle("disabled", !hasUser);
+      item.setAttribute(
+        "title",
+        hasUser ? "" : "Đăng nhập để mở mục này",
+      );
+      item.setAttribute("aria-disabled", hasUser ? "false" : "true");
+    });
+}
 
 window.openLyricsPage = function () {
   document.body.classList.add("lyrics-overlay-open");
@@ -1237,6 +1271,13 @@ window.openAlbum = function (id) {
 window.loadPage = function (pageUrl) {
   const contentArea = document.getElementById("main-content");
   if (!contentArea) return;
+
+  if (
+    (pageUrl === "recently-played" || pageUrl === "favorites") &&
+    !requireLoggedInAccess()
+  ) {
+    return;
+  }
 
   const currentView = contentArea.dataset.currentView || "Home.html";
   if (pageUrl === "lyrics.html") {

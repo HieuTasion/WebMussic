@@ -64,7 +64,8 @@ a {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 40px;
   padding: 32px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
@@ -146,7 +147,7 @@ button {
 
 .showcase-copy {
   max-width: 640px;
-  margin: 36px 0;
+  margin: 8px 0 0;
 }
 
 .section-tag {
@@ -193,15 +194,17 @@ button {
 
 .stat-panel,
 .hero-stats div {
-  padding: 18px;
-  border-radius: 22px;
-  background: var(--panel-alt);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .stat-panel-highlight {
-  background: linear-gradient(135deg, rgba(0, 212, 170, 0.18), rgba(0, 245, 196, 0.06));
-  border-color: var(--border-strong);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .stat-label {
@@ -415,6 +418,29 @@ button {
   gap: 12px;
   font-size: 0.88rem;
   color: #d8d8ea;
+}
+
+.user-delete-btn {
+  margin-top: 14px;
+  width: 100%;
+  border: 1px solid rgba(255, 103, 103, 0.35);
+  border-radius: 14px;
+  background: rgba(255, 103, 103, 0.08);
+  color: #ff8d8d;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.user-delete-btn:hover {
+  background: rgba(255, 103, 103, 0.16);
+  border-color: rgba(255, 103, 103, 0.5);
+}
+
+.user-delete-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 .empty-state {

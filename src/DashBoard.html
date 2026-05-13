@@ -26,7 +26,7 @@
 
       <nav>
         <div class="section-title" onclick="toggleMenu('menu-khampha', this)">
-          Kham pha
+          Khám phá
         </div>
         <div id="menu-khampha" class="menu">
           <div class="menu-item active" onclick="loadPage('Home.html')">
@@ -43,11 +43,11 @@
           Thư viện của tui
         </div>
         <div id="menu-thuvien" class="menu">
-          <div class="menu-item" onclick="loadPage('recently-played')">
+          <div class="menu-item" data-requires-login="true" onclick="loadPage('recently-played')">
             Nghe gần đây
           </div>
-          <div class="menu-item" onclick="loadPage('favorites')">
-            Nhạc yê thích
+          <div class="menu-item" data-requires-login="true" onclick="loadPage('favorites')">
+            Nhạc yêu thích
           </div>
         </div>
       </nav>
@@ -115,7 +115,7 @@
                 id="player-artist"
                 class="small text-secondary mb-0 text-truncate"
               >
-                Chon bai hat de phat
+                Chọn bài hát để bắt đầu nghe nào!
               </p>
             </div>
           </div>

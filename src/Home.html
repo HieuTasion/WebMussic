@@ -16,10 +16,10 @@
 
     <style>
       :root {
-        --pink-primary: #FF6B6B;
-        --pink-light: #FF8E8E;
-        --pink-dark: #ee5a5a;
-        --pink-soft: #FFB6B6;
+        --pink-primary: #d9485f;
+        --pink-light: #ee6b80;
+        --pink-dark: #b9354c;
+        --pink-soft: #f6b6c1;
         --bg: #f5e6e8;
         --card-bg: #ffffff;
         --card-hover: #fff5f8;
@@ -64,6 +64,8 @@
 
       .text-teal {
         color: var(--pink-primary) !important;
+        font-weight: 700;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
       }
 
       .bg-teal {
@@ -242,6 +244,30 @@
         transition: all 0.3s;
       }
 
+      #main-content.page-home .home-section-title {
+        color: #f3f7ff !important;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        text-shadow: 0 0 18px rgba(0, 0, 0, 0.28);
+      }
+
+      #main-content.page-home .home-section-title i,
+      #main-content.page-home .home-section-title .section-accent {
+        color: #ffb347 !important;
+      }
+
+      #main-content.page-home #hero-content .text-teal,
+      #main-content.page-home #current-album-title.text-teal,
+      #main-content.page-home .featured-card .text-teal,
+      #main-content.page-home #hot-songs-list .text-teal {
+        color: #ff5c78 !important;
+        text-shadow: 0 0 10px rgba(255, 92, 120, 0.22);
+      }
+
+      #main-content.page-home #hero-content .text-teal {
+        letter-spacing: 0.01em;
+      }
+
       .bi-play-circle-fill {
         transition: all 0.3s;
         color: var(--pink-primary) !important;
@@ -258,6 +284,107 @@
       .list-group-item:hover {
         background: rgba(255, 107, 107, 0.05) !important;
         padding-left: 10px !important;
+      }
+
+      #main-content.page-home .featured-card h6,
+      #main-content.page-home .featured-card .text-teal,
+      #main-content.page-home #hot-songs-list .list-group-item p,
+      #main-content.page-home #hot-songs-list .list-group-item .fw-bold:not(.text-teal) {
+        color: #eef4ff !important;
+        font-weight: 800 !important;
+        text-shadow: 0 0 12px rgba(0, 0, 0, 0.22);
+      }
+
+      #main-content.page-home .featured-card p,
+      #main-content.page-home #hot-songs-list .list-group-item small,
+      #main-content.page-home #hot-songs-list .list-group-item .small,
+      #main-content.page-home #hot-songs-list .list-group-item .text-secondary {
+        color: #a9bdd8 !important;
+        font-weight: 600;
+      }
+
+      #main-content.page-home .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding-left: 18px;
+        border-left: 4px solid #ff5c78;
+      }
+
+      #main-content.page-home .section-header h2 {
+        margin: 0;
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: #f3f7ff !important;
+        text-shadow: 0 0 18px rgba(0, 0, 0, 0.28);
+      }
+
+      #main-content.page-home .section-header h2 i {
+        color: #ff5c78 !important;
+      }
+
+      #main-content.page-home .view-all {
+        color: #ff9fb0 !important;
+        font-weight: 700;
+      }
+
+      #main-content.page-home .trending-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+      }
+
+      #main-content.page-home .trend-card {
+        background: linear-gradient(135deg, #fff1f4 0%, #ffdce4 100%);
+        border: 1px solid rgba(255, 92, 120, 0.24);
+        border-radius: 20px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 12px 28px rgba(255, 92, 120, 0.14);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      }
+
+      #main-content.page-home .trend-card:hover {
+        transform: translateY(-3px);
+        border-color: #ff5c78;
+        box-shadow: 0 16px 32px rgba(255, 92, 120, 0.2);
+      }
+
+      #main-content.page-home .trend-number {
+        min-width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 92, 120, 0.14);
+        color: #ff6d86;
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      #main-content.page-home .trend-info h4 {
+        margin: 0 0 4px;
+        color: #7f1830 !important;
+        font-size: 1.02rem;
+        font-weight: 800;
+      }
+
+      #main-content.page-home .trend-info p {
+        margin: 0;
+        color: #8f4357 !important;
+        font-size: 0.92rem;
+        font-weight: 600;
+      }
+
+      #main-content.page-home .trend-icon {
+        margin-left: auto;
+        color: #ff6d86;
+        font-size: 1.3rem;
       }
 
       /* Text colors */
@@ -341,7 +468,7 @@
         </div>
 
         <div class="mb-5">
-          <h2 class="h4 fw-bold mb-4">✨ Gợi ý cho bạn</h2>
+          <h2 class="h4 home-section-title mb-4"><span class="section-accent">✨</span> Gợi ý cho bạn</h2>
           <div class="row g-4">
             <div class="col-12 col-md-6 col-lg-4">
               <div
@@ -412,7 +539,7 @@
         </div>
 
         <div>
-          <h2 class="h4 fw-bold mb-4">🔥 Bảng xếp hạng nhạc hot</h2>
+          <h2 class="h4 home-section-title mb-4"><span class="section-accent">🔥</span> Bảng xếp hạng nhạc hot</h2>
           <div
             id="hot-songs-list"
             class="list-group list-group-flush bg-transparent"

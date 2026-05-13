@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ho so | Harmonix</title>
+    <title>Hồ sơ | Harmonix</title>
     <link rel="stylesheet" href="../style/profile.css" />
     <script src="../javascript/profile.js" defer></script>
     <link
@@ -17,7 +17,9 @@
         <div class="hero-top">
           <div class="brand-wrap">
             <div class="brand">Harmonix</div>
-            <p class="brand-copy">Profile overview with the same tone as dashboard.</p>
+            <p class="brand-copy">
+              Profile overview với cùng tinh thần giao diện dashboard.
+            </p>
           </div>
           <div class="hero-actions">
             <a href="DashBoard.html" class="ghost-btn">
@@ -26,11 +28,11 @@
             </a>
             <a href="settings.html" class="ghost-btn">
               <i class="bi bi-sliders"></i>
-              Cai dat
+              Cài đặt
             </a>
             <button id="logout-btn" class="ghost-btn danger" type="button">
               <i class="bi bi-box-arrow-right"></i>
-              Dang xuat
+              Đăng xuất
             </button>
           </div>
         </div>
@@ -39,26 +41,26 @@
           <div class="profile-header">
             <div class="avatar" id="profile-avatar">U</div>
             <div class="profile-intro">
-              <p class="eyebrow">Tai khoan cua ban</p>
-              <h1 id="profile-name">Nguoi dung</h1>
+              <p class="eyebrow">Tài khoản của bạn</p>
+              <h1 id="profile-name">Người dùng</h1>
               <p id="profile-email">email@example.com</p>
             </div>
             <div class="status-card">
-              <span>Trang thai</span>
-              <strong id="profile-status">Dang hoat dong</strong>
+              <span>Trạng thái</span>
+              <strong id="profile-status">Đang hoạt động</strong>
             </div>
           </div>
 
           <div class="hero-summary">
             <div class="summary-chip">
               <span>Library</span>
-              <strong><span id="saved-songs-count">0</span> bai da luu</strong>
+              <strong><span id="saved-songs-count">0</span> bài đã lưu</strong>
             </div>
             <div class="summary-chip">
               <span>System</span>
-              <strong><span id="total-users-count">0</span> tai khoan</strong>
+              <strong><span id="total-users-count">0</span> tài khoản</strong>
             </div>
-            <a class="summary-link" href="users.html">Xem danh sach dang ky</a>
+            <a class="summary-link" href="settings.html">Mở cài đặt</a>
           </div>
         </section>
 
@@ -66,14 +68,14 @@
           <article class="panel panel-main">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Thong tin co ban</p>
-                <h2>Ho so tai khoan</h2>
+                <p class="eyebrow">Thông tin cơ bản</p>
+                <h2>Hồ sơ tài khoản</h2>
               </div>
               <button
                 id="copy-email"
                 class="icon-btn"
                 type="button"
-                title="Sao chep email"
+                title="Sao chép email"
               >
                 <i class="bi bi-copy"></i>
               </button>
@@ -81,7 +83,7 @@
 
             <div class="info-list">
               <div class="info-row">
-                <span>Ten hien thi</span>
+                <span>Tên hiển thị</span>
                 <strong id="detail-name">-</strong>
               </div>
               <div class="info-row">
@@ -89,11 +91,11 @@
                 <strong id="detail-email">-</strong>
               </div>
               <div class="info-row">
-                <span>Ngay tao tai khoan</span>
+                <span>Ngày tạo tài khoản</span>
                 <strong id="detail-createdAt">-</strong>
               </div>
               <div class="info-row">
-                <span>ID nguoi dung</span>
+                <span>ID người dùng</span>
                 <strong id="detail-id">-</strong>
               </div>
             </div>
@@ -109,15 +111,15 @@
             <div class="action-stack">
               <a class="quick-link" href="DashBoard.html">
                 <i class="bi bi-grid-1x2"></i>
-                <span>Quay lai dashboard</span>
+                <span>Quay lại dashboard</span>
               </a>
               <a class="quick-link" href="settings.html">
                 <i class="bi bi-gear"></i>
-                <span>Mo trang cai dat</span>
+                <span>Mở trang cài đặt</span>
               </a>
-              <a class="quick-link" href="users.html">
-                <i class="bi bi-people"></i>
-                <span>Xem danh sach user</span>
+              <a class="quick-link" href="Home.html">
+                <i class="bi bi-house-heart"></i>
+                <span>Về trang chủ</span>
               </a>
             </div>
           </article>
@@ -125,30 +127,30 @@
           <article class="panel panel-wide">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Bao mat</p>
-                <h2>Trang thai tai khoan</h2>
+                <p class="eyebrow">Bảo mật</p>
+                <h2>Trạng thái tài khoản</h2>
               </div>
             </div>
             <div class="security-grid">
               <div class="security-card">
                 <i class="bi bi-shield-check"></i>
                 <div>
-                  <strong>Da xac thuc</strong>
-                  <p>Tai khoan dang duoc luu va su dung trong trinh duyet nay.</p>
+                  <strong>Đã xác thực</strong>
+                  <p>Tài khoản đang được lưu và sử dụng trong trình duyệt này.</p>
                 </div>
               </div>
               <div class="security-card">
                 <i class="bi bi-lock"></i>
                 <div>
-                  <strong>Mat khau demo</strong>
-                  <p>Nen dua qua backend neu muon dung cho san pham that.</p>
+                  <strong>Mật khẩu demo</strong>
+                  <p>Nên đưa qua backend nếu muốn dùng cho sản phẩm thật.</p>
                 </div>
               </div>
               <div class="security-card">
                 <i class="bi bi-clock-history"></i>
                 <div>
-                  <strong>Hoat dong gan day</strong>
-                  <p id="activity-text">Chua co du lieu hoat dong.</p>
+                  <strong>Hoạt động gần đây</strong>
+                  <p id="activity-text">Chưa có dữ liệu hoạt động.</p>
                 </div>
               </div>
             </div>

@@ -30,12 +30,12 @@ function getStoredSettings() {
 }
 
 function hydrateUser(user, settings) {
-  const email = user?.email || "Chua dang nhap";
+  const email = user?.email || "Chưa đăng nhập";
   const displayName = settings.displayName || user?.name || getNameFromEmail(email);
 
   setValue(
     "settings-display-name",
-    displayName === "Chua dang nhap" ? "" : displayName,
+    displayName === "Chưa đăng nhập" ? "" : displayName,
   );
   setValue("settings-email", user?.email || "");
   setChecked("settings-neon", settings.neon !== false);
@@ -46,8 +46,8 @@ function hydrateUser(user, settings) {
   setChecked("settings-remember-view", settings.rememberView !== false);
 
   const summary = user
-    ? `Tai khoan hien tai: ${email}`
-    : "Chua dang nhap, dang dung bo cai dat mac dinh tren trinh duyet nay.";
+    ? `Tài khoản hiện tại: ${email}`
+    : "Chưa đăng nhập, đang dùng bộ cài đặt mặc định trên trình duyệt này.";
 
   setText("settings-user-email", summary);
   updateVolumeLabel(Number(settings.volume ?? 80));
@@ -104,12 +104,12 @@ function bindSettingsForm(user, settings) {
     applySettingsState(nextSettings);
     setText(
       "settings-user-email",
-      user ? `Tai khoan hien tai: ${user.email}` : "Da luu bo cai dat local.",
+      user ? `Tài khoản hiện tại: ${user.email}` : "Đã lưu bộ cài đặt local.",
     );
 
     const feedback = document.getElementById("settings-feedback");
     if (feedback) {
-      feedback.textContent = "Da luu cai dat thanh cong.";
+      feedback.textContent = "Đã lưu cài đặt thành công.";
       feedback.classList.add("is-success");
     }
   });
@@ -132,7 +132,7 @@ function clampVolume(value) {
 
 function getNameFromEmail(email) {
   const value = String(email || "").trim();
-  if (!value || value === "Chua dang nhap") return "Chua dang nhap";
+  if (!value || value === "Chưa đăng nhập") return "Chưa đăng nhập";
   return value.split("@")[0];
 }
 

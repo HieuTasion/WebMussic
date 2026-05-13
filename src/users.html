@@ -10,29 +10,36 @@
   <body data-page="users">
     <main class="auth-shell auth-shell-wide">
       <section class="auth-hero auth-hero-list">
-        <div class="brand-badge">Harmonix</div>
+        <div class="brand-badge">Admin</div>
         <h1>Danh sách tài khoản đã đăng ký</h1>
-        <p>Toàn bộ Gmail đã lưu trong localStorage sẽ hiển thị tại đây để bạn tiện kiểm tra.</p>
+        <p>
+          Trang này chỉ dành cho admin và hiển thị dữ liệu người dùng lấy trực
+          tiếp từ API.
+        </p>
         <div class="hero-stats">
           <div><strong id="registered-count">0</strong><span>tài khoản</span></div>
           <div><strong id="last-updated">--</strong><span>cập nhật cuối</span></div>
         </div>
         <div class="hero-links">
-          <a class="ghost-link" href="login.html">Về đăng nhập</a>
-          <a class="ghost-link" href="register.html">Tạo tài khoản mới</a>
+          <a class="ghost-link" href="DashBoard.html">Về dashboard</a>
+          <a class="ghost-link" href="profile.html">Mở hồ sơ</a>
         </div>
       </section>
 
       <section class="auth-card auth-card-wide">
         <div class="card-top">
           <div>
-            <p class="section-tag">Stored Users</p>
-            <h2>Danh sách Gmail đã tạo</h2>
+            <p class="section-tag">Admin View</p>
+            <h2>Danh sách người đăng ký</h2>
           </div>
-          <button class="text-link button-reset" id="clear-users" type="button">Xóa tất cả</button>
+          <button class="text-link button-reset" id="clear-users" type="button">
+            Tải lại
+          </button>
         </div>
 
-        <div id="users-empty" class="empty-state">Chưa có tài khoản nào được đăng ký.</div>
+        <div id="users-empty" class="empty-state">
+          Chưa có tài khoản nào được đăng ký.
+        </div>
         <div id="users-list" class="users-grid"></div>
       </section>
     </main>

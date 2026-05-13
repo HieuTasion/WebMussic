@@ -169,6 +169,11 @@ body.lyrics-overlay-open .content.page-lyrics {
   filter: drop-shadow(0 0 5px rgba(0, 212, 170, 0.6));
 }
 
+.menu-item.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 /* =========================================
    MAIN CONTENT
    ========================================= */

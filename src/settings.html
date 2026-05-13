@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cai dat | Harmonix</title>
+    <title>Cài đặt | Harmonix</title>
     <link rel="stylesheet" href="../style/settings.css" />
     <script src="../javascript/settings.js" defer></script>
     <link
@@ -16,9 +16,8 @@
       <section class="settings-shell">
         <div class="page-top">
           <div>
-          
-            <h1>Cai dat co ban</h1>
-            <p>Gon, de dung va dong bo visual voi dashboard.</p>
+            <h1>Cài đặt cơ bản</h1>
+            <p>Gọn, dễ dùng và đồng bộ giao diện với dashboard.</p>
           </div>
           <div class="top-actions">
             <a href="DashBoard.html" class="ghost-btn">
@@ -27,7 +26,7 @@
             </a>
             <a href="profile.html" class="ghost-btn">
               <i class="bi bi-person"></i>
-              Ho so
+              Hồ sơ
             </a>
           </div>
         </div>
@@ -35,9 +34,9 @@
         <section class="settings-hero">
           <div class="hero-copy">
             <p class="eyebrow">Preferences</p>
-            <h2>Tuy chinh nhanh cho tai khoan hien tai</h2>
+            <h2>Tùy chỉnh nhanh cho tài khoản hiện tại</h2>
             <p id="settings-user-email" class="hero-note">
-              Dang dung che do mac dinh.
+              Đang dùng chế độ mặc định.
             </p>
           </div>
           <div class="hero-pills">
@@ -56,14 +55,18 @@
           <article class="panel">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Tai khoan</p>
-                <h3>Thong tin hien thi</h3>
+                <p class="eyebrow">Tài khoản</p>
+                <h3>Thông tin hiển thị</h3>
               </div>
             </div>
 
             <label class="field">
-              <span>Ten hien thi</span>
-              <input id="settings-display-name" type="text" placeholder="Nhap ten hien thi" />
+              <span>Tên hiển thị</span>
+              <input
+                id="settings-display-name"
+                type="text"
+                placeholder="Nhập tên hiển thị"
+              />
             </label>
 
             <label class="field">
@@ -75,15 +78,15 @@
           <article class="panel">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Giao dien</p>
-                <h3>Tuy chon nho</h3>
+                <p class="eyebrow">Giao diện</p>
+                <h3>Tùy chọn nhỏ</h3>
               </div>
             </div>
 
             <label class="toggle-row">
               <div>
-                <strong>Hieu ung neon nhe</strong>
-                <p>Giu lai do sang accent nhu dashboard.</p>
+                <strong>Hiệu ứng neon nhẹ</strong>
+                <p>Giữ lại độ sáng accent như dashboard.</p>
               </div>
               <input id="settings-neon" type="checkbox" checked />
             </label>
@@ -91,7 +94,7 @@
             <label class="toggle-row">
               <div>
                 <strong>Compact cards</strong>
-                <p>Thu gon khoang cach cho layout basic hon.</p>
+                <p>Thu gọn khoảng cách cho layout gọn hơn.</p>
               </div>
               <input id="settings-compact" type="checkbox" />
             </label>
@@ -100,20 +103,26 @@
           <article class="panel">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Am thanh</p>
-                <h3>Mac dinh player</h3>
+                <p class="eyebrow">Âm thanh</p>
+                <h3>Mặc định player</h3>
               </div>
             </div>
 
             <label class="field">
-              <span>Am luong mac dinh</span>
-              <input id="settings-volume" type="range" min="0" max="100" value="80" />
+              <span>Âm lượng mặc định</span>
+              <input
+                id="settings-volume"
+                type="range"
+                min="0"
+                max="100"
+                value="80"
+              />
             </label>
 
             <label class="toggle-row">
               <div>
-                <strong>Tu dong mo lyrics</strong>
-                <p>Mo trang loi bai hat nhanh hon khi dang nghe.</p>
+                <strong>Tự động mở lyrics</strong>
+                <p>Mở trang lời bài hát nhanh hơn khi đang nghe.</p>
               </div>
               <input id="settings-auto-lyrics" type="checkbox" />
             </label>
@@ -122,11 +131,11 @@
           <article class="panel panel-wide">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Thong bao</p>
-                <h3>Trang thai va thao tac nhanh</h3>
+                <p class="eyebrow">Thông báo</p>
+                <h3>Trạng thái và thao tác nhanh</h3>
               </div>
               <button id="settings-save" class="primary-btn" type="button">
-                Luu cai dat
+                Lưu cài đặt
               </button>
             </div>
 
@@ -134,24 +143,24 @@
               <label class="toggle-card">
                 <input id="settings-notify" type="checkbox" checked />
                 <div>
-                  <strong>Thong bao khi luu bai hat</strong>
-                  <p>Phu hop cho flow yeu thich va recently played.</p>
+                  <strong>Thông báo khi lưu bài hát</strong>
+                  <p>Phù hợp cho flow yêu thích và nghe gần đây.</p>
                 </div>
               </label>
 
               <label class="toggle-card">
                 <input id="settings-remember-view" type="checkbox" checked />
                 <div>
-                  <strong>Nho trang vua mo</strong>
-                  <p>Giup quay lai dung man hinh ban dang nghe.</p>
+                  <strong>Nhớ trang vừa mở</strong>
+                  <p>Giúp quay lại đúng màn hình bạn đang nghe.</p>
                 </div>
               </label>
 
-              <a class="link-card" href="users.html">
-                <i class="bi bi-people"></i>
+              <a class="link-card" href="profile.html">
+                <i class="bi bi-person-circle"></i>
                 <div>
-                  <strong>Quan ly danh sach user</strong>
-                  <p>Mo nhanh trang danh sach dang ky.</p>
+                  <strong>Hồ sơ tài khoản</strong>
+                  <p>Mở nhanh trang thông tin người dùng hiện tại.</p>
                 </div>
               </a>
             </div>

@@ -1,9 +1,9 @@
 const CURRENT_USER_KEY = "harmonix_current_user";
-const USERS_KEY = "harmonix_registered_users";
+const API_USERS_URL = "https://68ef6d3fb06cc802829d58ca.mockapi.io/User";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const user = getCurrentUser();
-  const allUsers = getUsers();
+  const allUsers = await fetchUsers();
 
   fillCounts(allUsers);
 
@@ -24,10 +24,11 @@ function getCurrentUser() {
   }
 }
 
-function getUsers() {
+async function fetchUsers() {
   try {
-    const raw = localStorage.getItem(USERS_KEY);
-    const users = raw ? JSON.parse(raw) : [];
+    const response = await fetch(API_USERS_URL);
+    if (!response.ok) return [];
+    const users = await response.json();
     return Array.isArray(users) ? users : [];
   } catch (error) {
     return [];
@@ -57,7 +58,7 @@ function renderProfile(user, users) {
   setText("profile-status", "Đang hoạt động");
   setText(
     "activity-text",
-    `Tài khoản được đăng nhập từ ${users.length} người dùng đã lưu trong hệ thống.`,
+    `Tài khoản đang được đồng bộ cùng ${users.length} người dùng trên hệ thống.`,
   );
 
   const avatar = document.getElementById("profile-avatar");
@@ -131,7 +132,7 @@ function getDisplayName(user) {
   if (explicitName) return explicitName;
 
   const email = String(user?.email || "").trim();
-  if (!email) return "Nguoi dung";
+  if (!email) return "Người dùng";
 
   return email.split("@")[0];
 }
