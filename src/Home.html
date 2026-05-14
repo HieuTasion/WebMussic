@@ -12,7 +12,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       :root {
@@ -130,7 +133,10 @@
         color: var(--text-dark);
         cursor: pointer;
         text-align: left;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
       }
 
       .home-search-item:hover,
@@ -289,7 +295,10 @@
       #main-content.page-home .featured-card h6,
       #main-content.page-home .featured-card .text-teal,
       #main-content.page-home #hot-songs-list .list-group-item p,
-      #main-content.page-home #hot-songs-list .list-group-item .fw-bold:not(.text-teal) {
+      #main-content.page-home
+        #hot-songs-list
+        .list-group-item
+        .fw-bold:not(.text-teal) {
         color: #eef4ff !important;
         font-weight: 800 !important;
         text-shadow: 0 0 12px rgba(0, 0, 0, 0.22);
@@ -346,7 +355,10 @@
         align-items: center;
         gap: 14px;
         box-shadow: 0 12px 28px rgba(255, 92, 120, 0.14);
-        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
       }
 
       #main-content.page-home .trend-card:hover {
@@ -388,7 +400,11 @@
       }
 
       /* Text colors */
-      h2, h3, h4, h5, h6 {
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         color: var(--text-dark) !important;
       }
 
@@ -417,12 +433,45 @@
         transform: scale(1.05);
       }
 
+      .rank-badge {
+        min-width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: #dc2626 !important;
+        background: rgba(220, 38, 38, 0.08);
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        text-shadow: none;
+      }
+
+      .hot-song-genre {
+        font-size: 0.75rem;
+        padding: 0.28rem 0.65rem;
+        border-radius: 999px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .hot-song-item {
+        border-radius: 18px !important;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.92) !important;
+        border: 1px solid rgba(255, 92, 120, 0.16) !important;
+      }
+
+      .hot-song-item:hover {
+        background: rgba(255, 244, 248, 0.98) !important;
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .hero-section {
           padding: 25px;
         }
-        
+
         h2 {
           font-size: 1.3rem;
         }
@@ -468,7 +517,9 @@
         </div>
 
         <div class="mb-5">
-          <h2 class="h4 home-section-title mb-4"><span class="section-accent">✨</span> Gợi ý cho bạn</h2>
+          <h2 class="h4 home-section-title mb-4">
+            <span class="section-accent">✨</span> Gợi ý cho bạn
+          </h2>
           <div class="row g-4">
             <div class="col-12 col-md-6 col-lg-4">
               <div
@@ -539,7 +590,9 @@
         </div>
 
         <div>
-          <h2 class="h4 home-section-title mb-4"><span class="section-accent">🔥</span> Bảng xếp hạng nhạc hot</h2>
+          <h2 class="h4 home-section-title mb-4">
+            <span class="section-accent">🔥</span> Bảng xếp hạng nhạc hot
+          </h2>
           <div
             id="hot-songs-list"
             class="list-group list-group-flush bg-transparent"
@@ -550,7 +603,9 @@
 
         <div class="mt-5">
           <div class="section-header mb-4">
-            <h2><i class="bi bi-bar-chart-line-fill"></i> Top 6 thể loại hot nhất</h2>
+            <h2>
+              <i class="bi bi-bar-chart-line-fill"></i> Top 6 thể loại hot nhất
+            </h2>
             <span class="view-all">Theo số bài và lượt thích</span>
           </div>
           <div class="trending-grid" id="top-genres-grid">
@@ -560,6 +615,107 @@
       </div>
     </div>
 
+    <script>
+      const hotSongs = [
+        {
+          rank: 1,
+          title: "Tuyển Bạn Gái",
+          artist: "OgeNus, Dangrangto",
+          genre: "Vpop",
+          hotScore: 98,
+        },
+        {
+          rank: 2,
+          title: "Tệ Hại Và Xấu Xí",
+          artist: "B Ray",
+          genre: "Vpop",
+          hotScore: 95,
+        },
+        {
+          rank: 3,
+          title: "Dạo Gần Đây Anh Thấy Anh Nhớ",
+          artist: "HIEUTHUHAI",
+          genre: "Vpop",
+          hotScore: 93,
+        },
+        {
+          rank: 4,
+          title: "Người Im Lặng Gặp Người Im Lặng",
+          artist: "HIEUTHUHAI",
+          genre: "Vpop",
+          hotScore: 90,
+        },
+        {
+          rank: 5,
+          title: "Mắt Bão",
+          artist: "Tội, Long Nón Lá",
+          genre: "Vpop",
+          hotScore: 88,
+        },
+        {
+          rank: 6,
+          title: "50 Năm Về Sau",
+          artist: "F47, meChill",
+          genre: "Pop",
+          hotScore: 86,
+        },
+        {
+          rank: 7,
+          title: "Không Buông",
+          artist: "Hngle, Ari",
+          genre: "Pop",
+          hotScore: 84,
+        },
+        {
+          rank: 8,
+          title: "Hôn Lễ Của Em",
+          artist: "Trọng Nhân, Tiêu Mỹ",
+          genre: "Pop",
+          hotScore: 82,
+        },
+        {
+          rank: 9,
+          title: "Tuyển Bạn Gái (Remix)",
+          artist: "OgeNus, Dangrangto",
+          genre: "Pop",
+          hotScore: 80,
+        },
+        {
+          rank: 10,
+          title: "Cuộc Vui Vẫn Chưa Kết Thúc",
+          artist: "VTEE",
+          genre: "Pop",
+          hotScore: 78,
+        },
+      ];
+
+      function renderHotSongs() {
+        const list = document.getElementById("hot-songs-list");
+        if (!list) return;
+        list.innerHTML = hotSongs
+          .slice(0, 10)
+          .map(
+            (song) => `
+              <a href="javascript:void(0)" class="list-group-item list-group-item-action hot-song-item d-flex align-items-center gap-3">
+                <div class="rank-badge">${song.rank}</div>
+                <div class="flex-grow-1">
+                  <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                    <div>
+                      <div class="fw-bold mb-1">${song.title}</div>
+                      <div class="small text-secondary">${song.artist}</div>
+                    </div>
+                    <span class="hot-song-genre badge ${song.genre === "Vpop" ? "bg-danger" : "bg-warning text-dark"}">${song.genre}</span>
+                  </div>
+                  <div class="small text-secondary mt-2">Xếp hạng theo độ hot và lượt nghe hiện tại.</div>
+                </div>
+              </a>
+            `,
+          )
+          .join("");
+      }
+
+      document.addEventListener("DOMContentLoaded", renderHotSongs);
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

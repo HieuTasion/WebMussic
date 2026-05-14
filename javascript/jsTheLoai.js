@@ -11,6 +11,7 @@ function normalizeGenre(raw) {
     return "V-Pop";
   if (name.includes("pop")) return "Pop";
   if (name.includes("rock")) return "Rock";
+  if (name.includes("K-Pop")) return "K-Pop";
   if (name.includes("edm") || name.includes("dance")) return "EDM";
   if (name.includes("lofi")) return "Lofi";
   if (name.includes("jazz")) return "Jazz";

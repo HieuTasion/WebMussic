@@ -66,16 +66,11 @@ function requireLoggedInAccess() {
 
 function syncProtectedLibraryMenuState() {
   const hasUser = Boolean(getCurrentUser());
-  document
-    .querySelectorAll("[data-requires-login='true']")
-    .forEach((item) => {
-      item.classList.toggle("disabled", !hasUser);
-      item.setAttribute(
-        "title",
-        hasUser ? "" : "Đăng nhập để mở mục này",
-      );
-      item.setAttribute("aria-disabled", hasUser ? "false" : "true");
-    });
+  document.querySelectorAll("[data-requires-login='true']").forEach((item) => {
+    item.classList.toggle("disabled", !hasUser);
+    item.setAttribute("title", hasUser ? "" : "Đăng nhập để mở mục này");
+    item.setAttribute("aria-disabled", hasUser ? "false" : "true");
+  });
 }
 
 window.openLyricsPage = function () {
@@ -214,7 +209,10 @@ function initPlayerControls() {
 
   if (progressBar) {
     progressBar.oninput = () => {
-      const effectiveDuration = getPreferredSongDuration(currentSongMeta, audio);
+      const effectiveDuration = getPreferredSongDuration(
+        currentSongMeta,
+        audio,
+      );
       if (!effectiveDuration) return;
       audio.currentTime = (progressBar.value / 100) * effectiveDuration;
     };
@@ -527,7 +525,10 @@ function syncPlayerDurationUI(player = audio) {
 
   if (!player || !effectiveDuration) return;
 
-  const clampedCurrentTime = Math.min(player.currentTime || 0, effectiveDuration);
+  const clampedCurrentTime = Math.min(
+    player.currentTime || 0,
+    effectiveDuration,
+  );
 
   if (progress) {
     progress.value = (clampedCurrentTime / effectiveDuration) * 100;
@@ -716,7 +717,8 @@ function renderDashboardSelectedSong(song) {
       const songs = songLibraryCache.length ? songLibraryCache : [song];
       const index = songs.findIndex(
         (item) =>
-          item.Url === song.Url || normalizeSongKey(item) === normalizeSongKey(song),
+          item.Url === song.Url ||
+          normalizeSongKey(item) === normalizeSongKey(song),
       );
 
       playThisSong(
@@ -959,7 +961,10 @@ window.playThisSong = function (
   const playerAudio = allAudio[0];
   playerAutoAdvanceLock = false;
   playerAudio.src = url;
-  const preferredDuration = getPreferredSongDuration(currentSongMeta, playerAudio);
+  const preferredDuration = getPreferredSongDuration(
+    currentSongMeta,
+    playerAudio,
+  );
   allTotalTimes.forEach((el) => {
     el.innerText = formatTime(preferredDuration);
   });
@@ -971,7 +976,10 @@ window.playThisSong = function (
 
   playerAudio.onloadedmetadata = () => {
     playerAutoAdvanceLock = false;
-    const effectiveDuration = getPreferredSongDuration(currentSongMeta, playerAudio);
+    const effectiveDuration = getPreferredSongDuration(
+      currentSongMeta,
+      playerAudio,
+    );
     allTotalTimes.forEach((el) => {
       el.innerText = formatTime(effectiveDuration);
     });
@@ -1007,16 +1015,16 @@ async function loadHotSongs() {
     const hotSongs = [...songs].sort(
       (a, b) => Number(b.Likes || 0) - Number(a.Likes || 0),
     );
-    window.__hotSongsQueue = hotSongs;
+    window.__hotSongsQueue = hotSongs.slice(0, 10);
 
-    container.innerHTML = hotSongs
+    container.innerHTML = window.__hotSongsQueue
       .map(
         (song, index) => `
           <div class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between px-0 py-3"
                style="cursor:pointer"
                onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__hotSongsQueue, ${index})">
             <div class="d-flex align-items-center">
-              <span class="me-3 fw-bold ${index < 3 ? "text-teal" : "text-secondary"}">${String(
+              <span class="me-3 fw-bold text-danger">${String(
                 index + 1,
               ).padStart(2, "0")}</span>
               <img src="${song.Img}" class="rounded me-3"
@@ -1140,7 +1148,7 @@ function renderFavoritesPage() {
                   (song, index) => `
                     <div class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between px-0 py-3" style="cursor:pointer" onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__favoriteSongsQueue, ${index})">
                       <div class="d-flex align-items-center">
-                        <span class="me-3 fw-bold text-teal">${String(index + 1).padStart(2, "0")}</span>
+                        <span class="me-3 fw-bold text-danger">${String(index + 1).padStart(2, "0")}</span>
                         <img src="${song.Img}" class="rounded me-3" style="width:50px;height:50px;object-fit:cover" onerror="this.src='https://picsum.photos/50/50'">
                         <div>
                           <p class="mb-0 fw-bold">${song.Name}</p>
