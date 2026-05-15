@@ -29,7 +29,9 @@ function setMessage(element, text, type) {
 }
 
 function normalizeIdentifier(value) {
-  return String(value || "").trim().toLowerCase();
+  return String(value || "")
+    .trim()
+    .toLowerCase();
 }
 
 function looksLikeEmail(value) {
@@ -172,7 +174,7 @@ function initLoginPage() {
           "is-error",
         );
         setTimeout(() => {
-          window.location.href = "register.html";
+          window.location.href = "src/register.html";
         }, 900);
         return;
       }
@@ -190,7 +192,7 @@ function initLoginPage() {
       );
 
       setTimeout(() => {
-        window.location.href = "DashBoard.html";
+        window.location.href = "src/DashBoard.html";
       }, 700);
     } catch (error) {
       setMessage(
@@ -243,7 +245,9 @@ function initRegisterPage() {
         return;
       }
 
-      const createdUser = await createUser(buildUserPayload(identifier, password));
+      const createdUser = await createUser(
+        buildUserPayload(identifier, password),
+      );
 
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(createdUser));
       localStorage.setItem(LAST_REGISTERED_IDENTIFIER_KEY, identifier);
@@ -256,7 +260,7 @@ function initRegisterPage() {
       );
 
       setTimeout(() => {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
       }, 900);
     } catch (error) {
       setMessage(
@@ -271,7 +275,7 @@ function initRegisterPage() {
 async function initUsersPage() {
   const currentUser = getCurrentUser();
   if (!currentUser) {
-    window.location.href = "login.html";
+    window.location.href = "index.html";
     return;
   }
 
