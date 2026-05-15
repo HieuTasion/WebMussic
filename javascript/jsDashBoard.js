@@ -106,8 +106,8 @@ window.closeLyricsPage = function () {
   document.body.classList.remove("lyrics-overlay-open");
   const contentArea = document.getElementById("main-content");
   if (contentArea && contentArea.classList.contains("page-lyrics")) {
-    const fallbackView = contentArea.dataset.previousView || "Home.html";
-    loadPage(fallbackView);
+    const fallbackView = contentArea.dataset.previousView || "src/Home.html";
+    loadPage(fallbackView.replace("src/", ""));
   }
 };
 
@@ -1307,7 +1307,7 @@ window.toggleFavoriteSongByKey = function (url, name, artist, img) {
 
 window.openAlbum = function (id) {
   localStorage.setItem("selectedAlbumId", id);
-  loadPage("player-page.html");
+  loadPage("src/player-page.html");
 };
 
 // Phần nhạc yêu thích

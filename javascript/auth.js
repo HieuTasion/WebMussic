@@ -174,7 +174,9 @@ function initLoginPage() {
           "is-error",
         );
         setTimeout(() => {
-          window.location.href = "src/register.html";
+          // Nếu đang ở root (index.html), cần thêm src/ để vào đúng thư mục
+          const isRoot = !window.location.pathname.includes("/src/");
+          window.location.href = isRoot ? "src/register.html" : "register.html";
         }, 900);
         return;
       }
@@ -192,7 +194,9 @@ function initLoginPage() {
       );
 
       setTimeout(() => {
-        window.location.href = "src/DashBoard.html";
+        // Nếu đang ở root (index.html), cần thêm src/ để vào đúng thư mục
+        const isRoot = !window.location.pathname.includes("/src/");
+        window.location.href = isRoot ? "src/DashBoard.html" : "DashBoard.html";
       }, 700);
     } catch (error) {
       setMessage(
@@ -260,7 +264,7 @@ function initRegisterPage() {
       );
 
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
       }, 900);
     } catch (error) {
       setMessage(
@@ -275,7 +279,7 @@ function initRegisterPage() {
 async function initUsersPage() {
   const currentUser = getCurrentUser();
   if (!currentUser) {
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
     return;
   }
 
