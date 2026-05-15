@@ -44,6 +44,25 @@ document.addEventListener("DOMContentLoaded", () => {
   syncProtectedLibraryMenuState();
   initPlayerControls();
   loadPage("Home.html");
+
+  // Mobile sidebar toggle
+  const sidebarToggle = document.getElementById("sidebar-toggle");
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.querySelector(".sidebar-overlay");
+
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("show");
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    });
+  }
 });
 
 function getCurrentUser() {
@@ -232,10 +251,16 @@ function initPlayerControls() {
 }
 
 function persistCurrentSongMetaFromPlayer() {
-  const playerAudio = document.getElementById("main-audio");
-  const title = document.getElementById("player-title")?.innerText?.trim();
-  const artist = document.getElementById("player-artist")?.innerText?.trim();
-  const img = document.getElementById("player-img")?.getAttribute("src") || "";
+  const playerAudio = document.querySelector("#main-audio, #audioPlayer");
+  const title = document
+    .querySelector("#player-title, #playerTitle")
+    ?.innerText?.trim();
+  const artist = document
+    .querySelector("#player-artist, #playerArtist")
+    ?.innerText?.trim();
+  const img =
+    document.querySelector("#player-img, #playerImg")?.getAttribute("src") ||
+    "";
   const url = playerAudio?.currentSrc || playerAudio?.src || "";
 
   const hasPlayableSong =
@@ -278,7 +303,9 @@ function persistCurrentSongMetaFromPlayer() {
 
 function loadFavoriteSongs() {
   try {
-    const raw = localStorage.getItem("favoriteSongs");
+    const user = getCurrentUser();
+    const key = user ? `favoriteSongs_${user.id}` : "favoriteSongs";
+    const raw = localStorage.getItem(key);
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
@@ -287,12 +314,16 @@ function loadFavoriteSongs() {
 }
 
 function saveFavoriteSongs() {
-  localStorage.setItem("favoriteSongs", JSON.stringify(favoriteSongs));
+  const user = getCurrentUser();
+  const key = user ? `favoriteSongs_${user.id}` : "favoriteSongs";
+  localStorage.setItem(key, JSON.stringify(favoriteSongs));
 }
 
 function loadRecentlyPlayedSongs() {
   try {
-    const raw = localStorage.getItem("recentlyPlayedSongs");
+    const user = getCurrentUser();
+    const key = user ? `recentlyPlayedSongs_${user.id}` : "recentlyPlayedSongs";
+    const raw = localStorage.getItem(key);
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
@@ -301,7 +332,9 @@ function loadRecentlyPlayedSongs() {
 }
 
 function saveRecentlyPlayedSongs(songs) {
-  localStorage.setItem("recentlyPlayedSongs", JSON.stringify(songs));
+  const user = getCurrentUser();
+  const key = user ? `recentlyPlayedSongs_${user.id}` : "recentlyPlayedSongs";
+  localStorage.setItem(key, JSON.stringify(songs));
 }
 
 function trackRecentlyPlayedSong(song) {
@@ -593,6 +626,8 @@ function normalizeGenre(raw) {
   if (name.includes("hip")) return "Hip Hop";
   if (name.includes("v-pop") || name.includes("vpop") || name.includes("v pop"))
     return "V-Pop";
+  if (name.includes("k-pop") || name.includes("kpop") || name.includes("k pop"))
+    return "K-Pop";
   if (name.includes("pop")) return "Pop";
   if (name.includes("rock")) return "Rock";
   if (name.includes("edm") || name.includes("dance")) return "EDM";
@@ -878,10 +913,10 @@ window.playThisSong = function (
   playlist = null,
   index = 0,
 ) {
-  const allAudio = document.querySelectorAll("#main-audio");
-  const allTitles = document.querySelectorAll("#player-title");
-  const allArtists = document.querySelectorAll("#player-artist");
-  const allImgs = document.querySelectorAll("#player-img");
+  const allAudio = document.querySelectorAll("#main-audio, #audioPlayer");
+  const allTitles = document.querySelectorAll("#player-title, #playerTitle");
+  const allArtists = document.querySelectorAll("#player-artist, #playerArtist");
+  const allImgs = document.querySelectorAll("#player-img, #playerImg");
   const allTotalTimes = document.querySelectorAll("#total-duration");
 
   if (allAudio.length === 0) {
@@ -1151,8 +1186,8 @@ function renderFavoritesPage() {
                         <span class="me-3 fw-bold text-danger">${String(index + 1).padStart(2, "0")}</span>
                         <img src="${song.Img}" class="rounded me-3" style="width:50px;height:50px;object-fit:cover" onerror="this.src='https://picsum.photos/50/50'">
                         <div>
-                          <p class="mb-0 fw-bold">${song.Name}</p>
-                          <small class="text-secondary">${song.Artist}</small>
+                          <p class="mb-0 fw-bold" style="color: #ffffff !important; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); opacity: 1 !important; transition: none !important;">${repairMojibake(song.Name)}</p>
+                          <small style="color: rgba(255,255,255,0.8) !important;">${repairMojibake(song.Artist)}</small>
                         </div>
                       </div>
                       <button class="btn btn-link text-danger p-0" onclick="event.stopPropagation(); toggleFavoriteSongByKey('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}')">
@@ -1218,8 +1253,8 @@ function renderRecentlyPlayedPage() {
                           <div class="recent-song-index">${String(index + 1).padStart(2, "0")}</div>
                           <img src="${song.Img}" alt="${song.Name}" class="recent-song-thumb" onerror="this.src='https://picsum.photos/80/80'">
                           <div class="recent-song-info">
-                            <h3>${song.Name}</h3>
-                            <p>${song.Artist || "Đang cập nhật nghệ sĩ"}</p>
+                            <h3 class="fw-bold" style="color: #ffffff !important; font-size: 1.25rem; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); opacity: 1 !important; transition: none !important;">${repairMojibake(song.Name)}</h3>
+                            <p class="mb-0" style="color: rgba(255,255,255,0.8) !important;">${repairMojibake(song.Artist || "Đang cập nhật nghệ sĩ")}</p>
                           </div>
                         </div>
                         <div class="recent-song-meta">

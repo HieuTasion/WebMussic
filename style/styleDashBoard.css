@@ -123,7 +123,10 @@ body.lyrics-overlay-open .content.page-lyrics {
   overflow: hidden;
   max-height: 500px;
   opacity: 1;
-  transition: max-height 0.3s ease-in-out, opacity 0.2s ease, margin 0.3s;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.2s ease,
+    margin 0.3s;
 }
 
 .menu.collapsed {
@@ -304,7 +307,9 @@ body.lyrics-overlay-open .content.page-lyrics {
   padding: 18px 28px;
   cursor: pointer;
   border-top: 1px solid rgba(0, 212, 170, 0.07);
-  transition: background 0.25s ease, transform 0.25s ease;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
 }
 
 .recent-song-row:first-child {
@@ -359,13 +364,13 @@ body.lyrics-overlay-open .content.page-lyrics {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #d0e8ff;
+  color: #ffffff;
 }
 
 .recent-song-info p,
 .recent-played-time {
   margin: 0;
-  color: #6888aa;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .recent-play-btn {
@@ -379,7 +384,10 @@ body.lyrics-overlay-open .content.page-lyrics {
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .recent-play-btn:hover {
@@ -410,7 +418,9 @@ body.lyrics-overlay-open .content.page-lyrics {
 .btn-teal {
   background-color: #00d4aa !important;
   border: none;
-  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-teal:hover {
@@ -514,8 +524,27 @@ body.dashboard-page .fixed-bottom .container-fluid {
    ========================================= */
 .text-white,
 #player-title,
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #d0e8ff !important;
+}
+
+#main-content .list-group-item .fw-bold,
+#main-content .list-group-item .text-white,
+#main-content .song-item-row h4,
+#main-content .song-item-row p,
+#main-content .home-selected-song h4,
+#player-title {
+  color: #ffffff !important;
+}
+
+#main-content .list-group-item .small,
+#main-content .song-item-row p {
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .text-secondary,
@@ -647,6 +676,119 @@ h1, h2, h3, h4, h5, h6 {
   .recent-song-meta {
     justify-content: space-between;
     padding-left: 50px;
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #0a0e1a;
+  border-bottom: 1px solid rgba(0, 212, 170, 0.12);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 1001;
+}
+
+.mobile-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #00d4aa;
+  margin-left: 16px;
+}
+
+#sidebar-toggle {
+  color: #00d4aa;
+  font-size: 18px;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+.sidebar-overlay.show {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+    position: fixed;
+    top: 60px; /* Below mobile header */
+    left: -100%;
+    height: calc(100vh - 60px);
+    z-index: 1000;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .content {
+    padding: 20px;
+    padding-top: 80px; /* Below mobile header */
+    padding-bottom: 120px;
+  }
+
+  .content.page-home,
+  .content.page-player {
+    padding: 20px;
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+
+  .content.page-genre {
+    padding: 0 0 120px;
+    padding-top: 60px;
+  }
+
+  body.dashboard-page .fixed-bottom {
+    left: 0 !important;
+    width: 100% !important;
+  }
+
+  .recent-page-hero {
+    padding: 24px;
+  }
+
+  .recent-hero-copy h1 {
+    font-size: 2rem;
+  }
+
+  .recent-count {
+    font-size: 2rem;
+  }
+
+  .recent-list-header,
+  .recent-song-row {
+    padding: 12px 16px;
+  }
+
+  .recent-song-thumb {
+    width: 56px;
+    height: 56px;
+  }
+
+  .recent-song-index {
+    width: 28px;
+  }
+
+  .recent-song-meta {
+    padding-left: 40px;
   }
 }
 

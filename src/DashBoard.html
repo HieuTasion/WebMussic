@@ -21,6 +21,14 @@
     />
   </head>
   <body class="dashboard-page">
+    <!-- Mobile Header -->
+    <div class="mobile-header d-md-none">
+      <button id="sidebar-toggle" class="btn btn-link">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="mobile-logo">NVNP Music</div>
+    </div>
+
     <div class="sidebar">
       <div class="logo">NVNP Music</div>
 
@@ -43,10 +51,18 @@
           Thư viện của tui
         </div>
         <div id="menu-thuvien" class="menu">
-          <div class="menu-item" data-requires-login="true" onclick="loadPage('recently-played')">
+          <div
+            class="menu-item"
+            data-requires-login="true"
+            onclick="loadPage('recently-played')"
+          >
             Nghe gần đây
           </div>
-          <div class="menu-item" data-requires-login="true" onclick="loadPage('favorites')">
+          <div
+            class="menu-item"
+            data-requires-login="true"
+            onclick="loadPage('favorites')"
+          >
             Nhạc yêu thích
           </div>
         </div>
@@ -57,28 +73,40 @@
           Hệ thống
         </div>
         <div id="menu-caidat" class="menu">
-          <div class="menu-item" onclick="window.location.href='settings.html'">Cài đặt</div>
-
+          <div
+            class="menu-item"
+            onclick="window.location.href = 'settings.html'"
+          >
+            Cài đặt
+          </div>
         </div>
       </nav>
 
       <nav>
         <div class="section-title" onclick="toggleMenu('menu-taikhoan', this)">
-          Tài khoản  
+          Tài khoản
         </div>
         <div id="menu-taikhoan" class="menu">
-          <div class="menu-item" onclick="window.location.href='profile.html'">
+          <div
+            class="menu-item"
+            onclick="window.location.href = 'profile.html'"
+          >
             Hồ sơ
           </div>
-          <div class="menu-item" onclick="window.location.href='login.html'">
+          <div class="menu-item" onclick="window.location.href = 'login.html'">
             Đăng nhập
           </div>
-          <div class="menu-item" onclick="window.location.href='register.html'">
+          <div
+            class="menu-item"
+            onclick="window.location.href = 'register.html'"
+          >
             Đăng ký
           </div>
         </div>
       </nav>
     </div>
+
+    <div class="sidebar-overlay"></div>
 
     <div class="content" id="main-content"></div>
 

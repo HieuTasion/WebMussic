@@ -9,9 +9,10 @@ function normalizeGenre(raw) {
   if (name.includes("hip")) return "Hip Hop";
   if (name.includes("v-pop") || name.includes("vpop") || name.includes("v pop"))
     return "V-Pop";
+  if (name.includes("k-pop") || name.includes("kpop") || name.includes("k pop"))
+    return "K-Pop";
   if (name.includes("pop")) return "Pop";
   if (name.includes("rock")) return "Rock";
-  if (name.includes("K-Pop")) return "K-Pop";
   if (name.includes("edm") || name.includes("dance")) return "EDM";
   if (name.includes("lofi")) return "Lofi";
   if (name.includes("jazz")) return "Jazz";
@@ -238,6 +239,7 @@ function getIconByGenre(name) {
     Rock: "fas fa-guitar",
     EDM: "fas fa-bolt",
     "Hip Hop": "fas fa-headphones",
+    "K-Pop": "fas fa-star",
   };
 
   return map[name] || "fas fa-music";
@@ -249,6 +251,7 @@ function getGradientByGenre(name) {
     Rock: "linear-gradient(135deg, #232526 0%, #414345 100%)",
     EDM: "linear-gradient(135deg, #00C6FF 0%, #0072FF 100%)",
     "Hip Hop": "linear-gradient(135deg, #F093FB 0%, #F5576C 100%)",
+    "K-Pop": "linear-gradient(135deg, #FF75C3 0%, #FFA647 100%)",
   };
 
   return map[name] || "linear-gradient(135deg, #667EEA 0%, #764BA2 100%)";
