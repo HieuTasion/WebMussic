@@ -1307,7 +1307,7 @@ window.toggleFavoriteSongByKey = function (url, name, artist, img) {
 
 window.openAlbum = function (id) {
   localStorage.setItem("selectedAlbumId", id);
-  loadPage("src/player-page.html");
+  loadPage("player-page.html");
 };
 
 // Phần nhạc yêu thích
