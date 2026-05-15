@@ -913,7 +913,7 @@ window.playThisSong = function (
   playlist = null,
   index = 0,
 ) {
-  const allAudio = document.querySelectorAll("#main-audio, #audioPlayer");
+  const allAudio = document.querySelectorAll("audio");
   const allTitles = document.querySelectorAll("#player-title, #playerTitle");
   const allArtists = document.querySelectorAll("#player-artist, #playerArtist");
   const allImgs = document.querySelectorAll("#player-img, #playerImg");
@@ -923,6 +923,12 @@ window.playThisSong = function (
     alert("Không tìm thấy thanh player để phát nhạc!");
     return;
   }
+
+  // Dừng tất cả các trình phát nhạc hiện có để tránh việc nhạc bị phát chồng chéo
+  allAudio.forEach((el) => {
+    el.pause();
+    el.currentTime = 0;
+  });
 
   allTitles.forEach((el) => {
     el.innerText = name;
@@ -993,7 +999,8 @@ window.playThisSong = function (
     }
   }
 
-  const playerAudio = allAudio[0];
+  // Luôn ưu tiên sử dụng trình phát chính ở thanh điều khiển phía dưới Dashboard (#main-audio)
+  const playerAudio = document.getElementById("main-audio") || allAudio[0];
   playerAutoAdvanceLock = false;
   playerAudio.src = url;
   const preferredDuration = getPreferredSongDuration(
@@ -1079,8 +1086,6 @@ async function loadHotSongs() {
     console.error("Lỗi API:", error);
   }
 }
-
-
 
 async function loadTopGenres() {
   const container = document.getElementById("top-genres-grid");
