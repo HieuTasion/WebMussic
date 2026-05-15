@@ -1080,9 +1080,14 @@ async function loadHotSongs() {
   }
 }
 
+
+
 async function loadTopGenres() {
   const container = document.getElementById("top-genres-grid");
   if (!container) return;
+
+  // Render static data first so it's not empty
+  renderStaticHotSongs();
 
   try {
     const songs = await getAllSongs();
