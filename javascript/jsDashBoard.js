@@ -924,10 +924,12 @@ window.playThisSong = function (
     return;
   }
 
-  // Dừng tất cả các trình phát nhạc hiện có để tránh việc nhạc bị phát chồng chéo
+  // Dừng tất cả các trình phát nhạc hiện có và giải phóng bộ nhớ để tránh phát chồng chéo
   allAudio.forEach((el) => {
     el.pause();
-    el.currentTime = 0;
+    el.src = "";
+    el.removeAttribute("src");
+    el.load();
   });
 
   allTitles.forEach((el) => {
@@ -1390,6 +1392,13 @@ window.loadPage = function (pageUrl) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
       doc.querySelectorAll("script").forEach((script) => script.remove());
+
+      // Xóa bỏ trình phát nhạc và thanh bar dư thừa từ trang con (như ở TheLoai.html)
+      // Việc này giúp tránh xung đột ID và đảm bảo chỉ có 1 trình phát nhạc duy nhất hoạt động
+      doc
+        .querySelectorAll("audio, #musicPlayerBar, .music-player-bar")
+        .forEach((el) => el.remove());
+
       applyPageStyles(doc);
 
       contentArea.innerHTML = doc.body ? doc.body.innerHTML : html;
