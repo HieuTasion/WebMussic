@@ -860,8 +860,6 @@ async function initDashboardSongSearch() {
 
   await getAllSongs();
 
-  dashboardSearchSelectedSong = currentSongMeta || null;
-  renderDashboardSelectedSong(dashboardSearchSelectedSong);
   renderDashboardSearchHint("Go tung ky tu de hien danh sach bai hat.");
 
   input.oninput = () => {
@@ -1003,12 +1001,6 @@ window.playThisSong = function (
       detail: { song: currentSongMeta },
     }),
   );
-
-  const selectedCard = document.getElementById("dashboard-selected-song");
-  if (selectedCard) {
-    dashboardSearchSelectedSong = currentSongMeta;
-    renderDashboardSelectedSong(currentSongMeta);
-  }
 
   const contentArea = document.getElementById("main-content");
   if (

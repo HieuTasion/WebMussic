@@ -97,6 +97,34 @@
     color: #d9485f;
     border-color: #d9485f;
   }
+
+  /* Mobile Responsive cho trang chi tiết */
+  @media (max-width: 768px) {
+    .song-detail-page {
+      padding: 20px;
+    }
+    .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      text-align: center;
+      justify-items: center;
+    }
+    .detail-image-wrapper {
+      width: 100%;
+      max-width: 320px;
+    }
+    .detail-content h1 {
+      font-size: 2.4rem;
+    }
+    .detail-content .artist-name {
+      font-size: 1.4rem;
+      margin-bottom: 25px;
+    }
+    .detail-controls {
+      justify-content: center;
+      width: 100%;
+    }
+  }
 </style>
 
 <div class="song-detail-page">

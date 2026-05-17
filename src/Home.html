@@ -148,6 +148,23 @@
         transition: color 0.2s ease;
       }
 
+      /* Responsive cho danh sách tìm kiếm trên điện thoại */
+      @media (max-width: 576px) {
+        .home-search-item {
+          grid-template-columns: 48px 1fr; /* Ẩn cột thời gian ở search trên mobile */
+          gap: 12px;
+          padding: 10px;
+        }
+        .home-search-item span:last-child {
+          display: none;
+        }
+        .home-search-item img {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+        }
+      }
+
       .home-search-item span {
         color: var(--text-gray);
         font-size: 0.92rem;
@@ -517,7 +534,6 @@
                 autocomplete="off"
               />
             </div>
-            <div id="dashboard-selected-song" class="home-selected-song"></div>
             <div id="dashboard-search-results" class="home-search-results">
               <div class="home-search-hint">
                 Gõ từng ký tự để hiện danh sách bài hát.
