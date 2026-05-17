@@ -744,6 +744,47 @@ h6 {
     padding-bottom: 120px;
   }
 
+  /* --- THIẾT KẾ PLAYER BAR RIÊNG CHO ĐIỆN THOẠI --- */
+  /* Ẩn các thành phần không cần thiết: Tên bài hát, thanh tiến trình, nút trộn/tim, và cụm âm lượng bên phải */
+  .fixed-bottom .text-truncate,
+  .fixed-bottom .col-6 .w-100.gap-2, /* Thanh progress bar */
+  #shuffle-btn,
+  #favorite-btn,
+  .fixed-bottom .col-3:last-child { /* Cụm Mic, List, Volume */
+    display: none !important;
+  }
+
+  /* Cấu hình lại bố cục hàng */
+  .fixed-bottom .row {
+    justify-content: space-between !important;
+    padding: 0 15px !important;
+  }
+
+  /* Cụm ảnh bài hát (Logo) */
+  .fixed-bottom .col-3:first-child {
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Cụm nút bấm (Prev, Play, Next) */
+  .fixed-bottom .col-6 {
+    width: auto !important;
+    flex: 1 !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  .fixed-bottom .col-6 .d-flex.flex-column {
+    flex-direction: row !important;
+    align-items: center !important;
+    margin-bottom: 0 !important;
+  }
+
+  .fixed-bottom .col-6 .mb-2 {
+    margin-bottom: 0 !important;
+    gap: 25px !important; /* Khoảng cách giữa 3 nút bấm chính */
+  }
+
   .content.page-home,
   .content.page-player {
     padding: 20px;
@@ -828,4 +869,42 @@ h6 {
   .recent-song-meta {
     padding-left: 40px;
   }
+}
+
+/* =========================================
+   HIỆU ỨNG HOVER TÊN BÀI HÁT TOÀN CỤC
+   ========================================= */
+/* Sử dụng ID #main-content để tăng độ ưu tiên, đè bẹp các !important khác */
+#main-content .list-group-item:hover .fw-bold,
+#main-content .recent-song-row:hover .recent-song-info h3,
+#main-content .song-item:hover .song-title,
+#main-content .home-search-item:hover strong,
+#main-content .song-item-row:hover .genre-song-title,
+#main-content .home-selected-song h4:hover,
+#main-content .detail-content h1:hover {
+  color: #00d4aa !important; /* Màu Cyan Neon */
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+/* Hiệu ứng mượt cho ảnh khi hover */
+.recent-song-thumb,
+.song-img,
+.home-search-item img,
+.detail-image-wrapper img {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.recent-song-row:hover .recent-song-thumb,
+.song-item:hover .song-img,
+.home-search-item:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 212, 170, 0.3);
+}
+
+/* Ẩn tất cả các nút hoặc liên kết Đăng ký trong Sidebar */
+.sidebar a[href*="register.html"],
+.sidebar .menu-item[onclick*="register.html"] {
+  display: none !important;
 }

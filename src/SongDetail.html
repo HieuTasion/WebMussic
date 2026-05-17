@@ -1,0 +1,125 @@
+<style data-page-inline-style="true">
+  .song-detail-page {
+    padding: 40px;
+    color: white;
+    animation: fadeIn 0.4s ease;
+  }
+  .detail-nav {
+    margin-bottom: 30px;
+  }
+  .btn-detail-back {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-detail-back:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-5px);
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 400px) 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+  .detail-image-wrapper img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover; /* Đảm bảo ảnh đầy khung, không méo */
+    border-radius: 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    background-color: #1a1a1a;
+    image-rendering: auto; /* Để trình duyệt tự làm mịn ảnh */
+  }
+  .detail-content h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: white !important;
+    transition: color 0.2s ease-in-out;
+  }
+  .detail-content h1:hover {
+    color: #d9485f !important; /* Đổi màu khi hover tên lớn */
+    cursor: pointer;
+  }
+  .detail-content .artist-name {
+    font-size: 1.8rem;
+    color: rgba(255, 255, 255, 0.7) !important;
+    margin-bottom: 30px;
+  }
+  .detail-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .btn-detail-play {
+    background: #d9485f; /* var(--pink-primary) */
+    color: white;
+    border: none;
+    padding: 18px 45px;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .btn-detail-play:hover {
+    background: #ee6b80;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(217, 72, 95, 0.4);
+  }
+  .btn-detail-like {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .btn-detail-like.active {
+    color: #d9485f;
+    border-color: #d9485f;
+  }
+</style>
+
+<div class="song-detail-page">
+  <div class="detail-nav">
+    <button class="btn-detail-back" onclick="loadPage('Home.html')">
+      <i class="bi bi-arrow-left"></i> Quay lại
+    </button>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-image-wrapper">
+      <img id="detail-song-img" src="" alt="Album Art" />
+    </div>
+    <div class="detail-content">
+      <h1 id="detail-song-name">Tên bài hát</h1>
+      <p class="artist-name" id="detail-song-artist">Nghệ sĩ</p>
+      <div class="detail-controls">
+        <button id="detail-play-main" class="btn-detail-play">
+          <i class="bi bi-play-fill"></i> Phát nhạc
+        </button>
+        <button id="detail-like-main" class="btn-detail-like">
+          <i class="bi bi-heart"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

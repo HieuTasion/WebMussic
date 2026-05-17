@@ -30,39 +30,27 @@
         --text-gray: #6b4c5a;
       }
 
-      body {
-        background-color: var(--bg);
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-        color: var(--text-dark);
-        font-family: "Inter", sans-serif;
-      }
-
-      .main-content-scroll {
-        flex: 1;
-        height: 100vh;
-        overflow-y: auto;
-        padding-bottom: 100px;
-      }
-
-      .main-content-scroll::-webkit-scrollbar {
+      /* Tùy chỉnh thanh cuộn chung cho Dashboard khi ở trang Home */
+      ::-webkit-scrollbar {
         width: 6px;
       }
-
-      .main-content-scroll::-webkit-scrollbar-track {
+      ::-webkit-scrollbar-track {
         background: #e6d6da;
         border-radius: 10px;
       }
-
-      .main-content-scroll::-webkit-scrollbar-thumb {
+      ::-webkit-scrollbar-thumb {
         background: var(--pink-primary);
         border-radius: 10px;
       }
-
-      .main-content-scroll::-webkit-scrollbar-thumb:hover {
+      ::-webkit-scrollbar-thumb:hover {
         background: var(--pink-light);
+      }
+
+      /* Gỡ bỏ giới hạn chiều cao cố định để tránh lỗi 2 thanh cuộn */
+      .main-content-scroll {
+        height: auto;
+        overflow-y: visible;
+        padding-bottom: 120px; /* Chừa khoảng trống cho Player Bar ở dưới cùng */
       }
 
       .text-teal {
@@ -157,6 +145,7 @@
         display: block;
         margin-bottom: 4px;
         color: var(--text-dark);
+        transition: color 0.2s ease;
       }
 
       .home-search-item span {
@@ -196,6 +185,8 @@
 
       .home-selected-song h4 {
         margin: 0 0 6px;
+        font-weight: 700;
+        color: var(--text-dark);
       }
 
       .home-selected-song p {
@@ -203,14 +194,38 @@
         color: var(--text-gray);
       }
 
-      .home-selected-song button {
-        border: none;
-        border-radius: 999px;
-        padding: 12px 18px;
+      .btn-play-song {
         background: var(--pink-primary);
-        color: #fff;
+        color: white !important;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 25px;
         font-weight: 700;
-        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(217, 72, 95, 0.3);
+      }
+
+      .btn-play-song:hover {
+        background: var(--pink-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(217, 72, 95, 0.4);
+      }
+
+      .btn-heart-song {
+        background: none;
+        border: none;
+        font-size: 1.6rem;
+        color: var(--text-gray);
+        cursor: pointer;
+        transition: all 0.2s;
+        padding: 0 10px;
+      }
+
+      .btn-heart-song.active {
+        color: var(--pink-primary);
       }
 
       .album-card {
@@ -287,6 +302,10 @@
         color: var(--text-dark) !important;
       }
 
+      .home-search-item:hover strong {
+        color: var(--pink-primary) !important;
+      }
+
       .list-group-item:hover {
         background: rgba(255, 107, 107, 0.05) !important;
         padding-left: 10px !important;
@@ -299,9 +318,10 @@
         #hot-songs-list
         .list-group-item
         .fw-bold:not(.text-teal) {
-        color: #eef4ff !important;
+        color: #eef4ff;
         font-weight: 800 !important;
         text-shadow: 0 0 12px rgba(0, 0, 0, 0.22);
+        transition: color 0.2s ease;
       }
 
       #main-content.page-home .featured-card p,

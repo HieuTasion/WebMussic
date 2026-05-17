@@ -89,43 +89,80 @@ function renderSongsByGenre(genreName) {
   grid.style.display = "flex";
   grid.style.flexDirection = "column";
   grid.style.gap = "15px";
-  window.__genreSongsQueue = genre.songs;
 
-  let html = `
-    <div style="margin-bottom: 25px; animation: fadeIn 0.5s ease;">
-      <button onclick="renderGenres('all')" style="background: #ffffff22; color: white; border: 1px solid white; padding: 10px 25px; border-radius: 30px; cursor: pointer;">
-        <i class="fas fa-arrow-left"></i> Quay lại thể loại
-      </button>
-      <h2 style="color: white; font-size: 2.2rem; margin-top: 20px;">Dòng nhạc: ${genre.name}</h2>
-    </div>
-  `;
-
-  genre.songs.forEach((song, index) => {
-    const name = song.Name || "Không tên";
-    const artist = song.Artist || "Nghe si";
-    const img = song.Img || "https://via.placeholder.com/50";
-    const likes = song.Likes || 0;
-    const plays = song.Count || 0;
-
-    html += `
-      <div class="song-item-row" onclick="playThisSong('${song.Url}', '${name.replace(/'/g, "\\'")}', '${artist.replace(/'/g, "\\'")}', '${img}', window.__genreSongsQueue, ${index})" style="background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; cursor: pointer;">
-        <div style="display: flex; align-items: center; gap: 15px;">
-          <span style="color: #666; width: 25px; font-weight: bold;">${index + 1}</span>
-          <img src="${img}" style="width: 55px; height: 55px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-          <div>
-            <h4 style="margin: 0; color: white; font-size: 1.1rem;">${name}</h4>
-            <p style="margin: 4px 0 0 0; color: #aaa; font-size: 0.85rem;">${artist}</p>
-          </div>
-        </div>
-        <div style="display: flex; gap: 30px; color: #ddd; font-size: 0.9rem;">
-          <span><i class="fas fa-heart" style="color: #ff4757;"></i> ${likes}</span>
-          <span><i class="fas fa-play"></i> ${plays}</span>
+  // Tạo khung tiêu đề kèm ô tìm kiếm
+  grid.innerHTML = `
+    <div style="margin-bottom: 25px; padding-top: 35px; animation: fadeIn 0.5s ease;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <button onclick="renderGenres('all')" style="background: #ffffff22; color: white; border: 1px solid white; padding: 10px 25px; border-radius: 30px; cursor: pointer;">
+          <i class="fas fa-arrow-left"></i> Quay lại thể loại
+        </button>
+        
+        <!-- Thanh tìm kiếm trong thể loại -->
+        <div class="genre-search-wrap" style="flex: 1; max-width: 400px; position: relative;">
+          <input type="text" id="genre-song-search" placeholder="Tìm bài hát trong ${genre.name}..." 
+                 style="width: 100%; padding: 10px 15px 10px 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; outline: none;">
+          <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5);"></i>
         </div>
       </div>
-    `;
-  });
+      <h2 style="color: white; font-size: 2.2rem; margin-top: 20px;">Dòng nhạc: ${genre.name}</h2>
+    </div>
+    <div id="genreSongsListContainer" style="display: flex; flex-direction: column; gap: 15px;"></div>
+  `;
 
-  grid.innerHTML = html;
+  const searchInput = document.getElementById("genre-song-search");
+  const listContainer = document.getElementById("genreSongsListContainer");
+
+  // Hàm cập nhật danh sách bài hát dựa trên từ khóa
+  const updateList = (keyword = "") => {
+    const filtered = genre.songs.filter((song) => {
+      const name = (song.Name || "").toLowerCase();
+      const artist = (song.Artist || "").toLowerCase();
+      const key = keyword.toLowerCase();
+      return name.includes(key) || artist.includes(key);
+    });
+
+    // Cập nhật hàng chờ phát nhạc để đồng bộ với kết quả tìm kiếm
+    window.__genreSongsQueue = filtered;
+
+    if (filtered.length === 0) {
+      listContainer.innerHTML = `<div style="text-align: center; color: #888; padding: 40px;">Không tìm thấy bài hát nào phù hợp.</div>`;
+      return;
+    }
+
+    listContainer.innerHTML = filtered
+      .map((song, index) => {
+        const name = song.Name || "Không tên";
+        const artist = song.Artist || "Nghe si";
+        const img = song.Img || "https://via.placeholder.com/50";
+        const likes = song.Likes || 0;
+        const plays = song.Count || 0;
+
+        return `
+        <div class="song-item-row" onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__genreSongsQueue, ${index})" style="background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="color: #666; width: 25px; font-weight: bold;">${index + 1}</span>
+            <img src="${img}" style="width: 55px; height: 55px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            <div>
+              <h4 class="genre-song-title" onclick="event.stopPropagation(); window.openSongDetail(window.__genreSongsQueue[${index}])" style="margin: 0; color: white; font-size: 1.1rem;">${name}</h4>
+              <p style="margin: 4px 0 0 0; color: #aaa; font-size: 0.85rem;">${artist}</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 30px; color: #ddd; font-size: 0.9rem;">
+            <span><i class="fas fa-heart" style="color: #ff4757;"></i> ${likes}</span>
+            <span><i class="fas fa-play"></i> ${plays}</span>
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+  };
+
+  // Gán sự kiện cho ô tìm kiếm
+  searchInput.oninput = (e) => updateList(e.target.value);
+
+  // Hiển thị danh sách ban đầu
+  updateList();
 }
 
 function renderGenres(filterValue = "all") {

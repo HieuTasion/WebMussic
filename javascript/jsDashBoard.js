@@ -65,6 +65,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+window.openSongDetail = function (song) {
+  if (!song) return;
+  localStorage.setItem("selectedSongDetail", JSON.stringify(song));
+  loadPage("SongDetail.html");
+};
+
+window.openSongDetailFromQueue = function (queueName, index) {
+  let song;
+  if (queueName === "hot") song = window.__hotSongsQueue[index];
+  if (queueName === "album") song = window.__albumSongsQueue[index];
+  window.openSongDetail(song);
+};
+
 function getCurrentUser() {
   try {
     const raw = localStorage.getItem(CURRENT_USER_KEY);
@@ -736,24 +749,56 @@ function renderDashboardSelectedSong(song) {
   }
 
   card.classList.add("is-visible");
+  const isFav = window.isSongFavorite(song);
+
   card.innerHTML = `
-    <img src="${song.Img}" alt="${escapeHtml(song.Name)}" onerror="this.src='https://picsum.photos/120/120'">
-    <div>
-      <h4>${escapeHtml(song.Name || "Chua co ten bai hat")}</h4>
-      <p>${escapeHtml(song.Artist || "Dang cap nhat nghe si")}</p>
-      <p>${escapeHtml(song.Times || getLyricsPreview(song, 64))}</p>
+    <img src="${song.Img}" alt="${escapeHtml(song.Name)}" onerror="this.src='https://picsum.photos/200/200'">
+    <div class="flex-grow-1 ms-3">
+      <h4>${escapeHtml(song.Name || "Chưa có tên bài")}</h4>
+      <p class="mb-1">${escapeHtml(song.Artist || "Nghệ sĩ đang cập nhật")}</p>
+      <p class="small text-muted">${escapeHtml(song.Times || "Thời lượng đang tính...")}</p>
     </div>
-    <button type="button" id="dashboard-play-selected-song">Phat nhac</button>
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="btn-heart-song ${isFav ? "active" : ""}" id="dashboard-heart-selected" title="Yêu thích">
+        <i class="bi ${isFav ? "bi-heart-fill" : "bi-heart"}"></i>
+      </button>
+      <button type="button" class="btn-play-song" id="dashboard-play-selected-song">
+        <i class="bi bi-play-circle-fill"></i> Phát nhạc
+      </button>
+    </div>
   `;
 
+  // Xử lý nút Yêu thích (Heart)
+  const heartBtn = document.getElementById("dashboard-heart-selected");
+  if (heartBtn) {
+    heartBtn.onclick = (e) => {
+      e.stopPropagation();
+      const existingIndex = getFavoriteSongIndex(song);
+      if (existingIndex !== -1) {
+        favoriteSongs.splice(existingIndex, 1);
+      } else {
+        favoriteSongs.unshift({ ...song });
+      }
+      saveFavoriteSongs();
+      renderDashboardSelectedSong(song); // Vẽ lại để cập nhật màu tim
+
+      // Đồng bộ với thanh player chính nếu đang phát bài này
+      if (
+        currentSongMeta &&
+        normalizeSongKey(currentSongMeta) === normalizeSongKey(song)
+      ) {
+        setFavoriteButtonState(currentSongMeta);
+      }
+    };
+  }
+
+  // Xử lý nút Phát nhạc
   const playBtn = document.getElementById("dashboard-play-selected-song");
   if (playBtn) {
     playBtn.onclick = () => {
-      const songs = songLibraryCache.length ? songLibraryCache : [song];
-      const index = songs.findIndex(
-        (item) =>
-          item.Url === song.Url ||
-          normalizeSongKey(item) === normalizeSongKey(song),
+      const library = songLibraryCache.length ? songLibraryCache : [song];
+      const idx = library.findIndex(
+        (s) => normalizeSongKey(s) === normalizeSongKey(song),
       );
 
       playThisSong(
@@ -761,8 +806,8 @@ function renderDashboardSelectedSong(song) {
         song.Name,
         song.Artist,
         song.Img,
-        index !== -1 ? songs : [song],
-        index !== -1 ? index : 0,
+        library,
+        idx !== -1 ? idx : 0,
       );
     };
   }
@@ -787,18 +832,19 @@ function renderDashboardSearchResults(songs, keyword = "") {
       (song, index) => `
         <button
           type="button"
-          class="home-search-item ${
-            dashboardSearchSelectedSong &&
-            normalizeSongKey(dashboardSearchSelectedSong) ===
-              normalizeSongKey(song)
-              ? "active"
-              : ""
-          }"
+            class="home-search-item song-row-clickable ${
+              dashboardSearchSelectedSong &&
+              normalizeSongKey(dashboardSearchSelectedSong) ===
+                normalizeSongKey(song)
+                ? "active"
+                : ""
+            }"
           data-search-index="${index}"
+          onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', null, 0)"
         >
           <img src="${song.Img}" alt="${escapeHtml(song.Name)}" onerror="this.src='https://picsum.photos/80/80'">
           <span>
-            <strong>${escapeHtml(song.Name || "Chua co ten")}</strong>
+            <strong onclick="event.stopPropagation(); window.openSongDetail(songLibraryCache.find(s => s.Url === '${escapeJsString(song.Url)}'))">${escapeHtml(song.Name || "Chua co ten")}</strong>
             <span>${escapeHtml(song.Artist || "Dang cap nhat nghe si")}</span>
           </span>
           <span>${escapeHtml(song.Times || "")}</span>
@@ -806,18 +852,6 @@ function renderDashboardSearchResults(songs, keyword = "") {
       `,
     )
     .join("");
-
-  Array.from(results.querySelectorAll(".home-search-item")).forEach((item) => {
-    item.onclick = () => {
-      const index = Number(item.dataset.searchIndex);
-      const selectedSong = songs[index];
-      if (!selectedSong) return;
-
-      dashboardSearchSelectedSong = selectedSong;
-      renderDashboardSelectedSong(selectedSong);
-      renderDashboardSearchResults(songs, keyword);
-    };
-  });
 }
 
 async function initDashboardSongSearch() {
@@ -1064,8 +1098,8 @@ async function loadHotSongs() {
     container.innerHTML = window.__hotSongsQueue
       .map(
         (song, index) => `
-          <div class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between px-0 py-3"
-               style="cursor:pointer"
+          <div class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between px-0 py-3" 
+               style="cursor:pointer" 
                onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__hotSongsQueue, ${index})">
             <div class="d-flex align-items-center">
               <span class="me-3 fw-bold text-danger">${String(
@@ -1075,8 +1109,8 @@ async function loadHotSongs() {
                    style="width:50px;height:50px;object-fit:cover"
                    onerror="this.src='https://picsum.photos/50/50'">
               <div>
-                <p class="mb-0 fw-bold">${song.Name}</p>
-                <small class="text-secondary">${song.Artist}</small>
+                <p class="mb-0 fw-bold" onclick="event.stopPropagation(); window.openSongDetailFromQueue('hot', ${index})">${repairMojibake(song.Name)}</p>
+                <small class="text-secondary">${repairMojibake(song.Artist)}</small>
               </div>
             </div>
             <div class="text-secondary small">${song.Times || ""}</div>
@@ -1120,7 +1154,7 @@ async function loadTopGenres() {
 
     const topGenres = Array.from(genreMap.values())
       .sort((a, b) => b.songCount - a.songCount || b.likes - a.likes)
-      .slice(0, 6);
+      .slice(0, 7);
 
     container.innerHTML = topGenres
       .map(
@@ -1200,7 +1234,7 @@ function renderFavoritesPage() {
                         <span class="me-3 fw-bold text-danger">${String(index + 1).padStart(2, "0")}</span>
                         <img src="${song.Img}" class="rounded me-3" style="width:50px;height:50px;object-fit:cover" onerror="this.src='https://picsum.photos/50/50'">
                         <div>
-                          <p class="mb-0 fw-bold" style="color: #ffffff !important; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); opacity: 1 !important; transition: none !important;">${repairMojibake(song.Name)}</p>
+                          <p class="mb-0 fw-bold" style="font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" onclick="event.stopPropagation(); window.openSongDetail(window.__favoriteSongsQueue[${index}])">${repairMojibake(song.Name)}</p>
                           <small style="color: rgba(255,255,255,0.8) !important;">${repairMojibake(song.Artist)}</small>
                         </div>
                       </div>
@@ -1267,13 +1301,13 @@ function renderRecentlyPlayedPage() {
                           <div class="recent-song-index">${String(index + 1).padStart(2, "0")}</div>
                           <img src="${song.Img}" alt="${song.Name}" class="recent-song-thumb" onerror="this.src='https://picsum.photos/80/80'">
                           <div class="recent-song-info">
-                            <h3 class="fw-bold" style="color: #ffffff !important; font-size: 1.25rem; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); opacity: 1 !important; transition: none !important;">${repairMojibake(song.Name)}</h3>
+                            <h3 class="fw-bold" style="font-size: 1.25rem; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" onclick="event.stopPropagation(); window.openSongDetail(window.__recentlyPlayedQueue[${index}])">${repairMojibake(song.Name)}</h3>
                             <p class="mb-0" style="color: rgba(255,255,255,0.8) !important;">${repairMojibake(song.Artist || "Đang cập nhật nghệ sĩ")}</p>
                           </div>
                         </div>
                         <div class="recent-song-meta">
                           <span class="recent-played-time">${formatPlayedTime(song.LastPlayedAt)}</span>
-                          <button class="recent-play-btn" onclick="event.stopPropagation(); playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__recentlyPlayedQueue, ${index})">
+                          <button class="recent-play-btn" onclick="event.stopPropagation(); window.openSongDetail(window.__recentlyPlayedQueue[${index}])">
                             <i class="bi bi-play-fill"></i>
                           </button>
                         </div>
@@ -1421,6 +1455,10 @@ window.loadPage = function (pageUrl) {
         initDashboardSongSearch();
       }
 
+      if (normalizedPage === "SongDetail.html") {
+        initSongDetailPage();
+      }
+
       if (
         normalizedPage === "TheLoai.html" &&
         typeof window.initGenreFilters === "function"
@@ -1523,7 +1561,7 @@ async function initPlayerPage() {
             <div class="song-number">${index + 1}</div>
             <img src="${song.Img}" alt="${song.Name}" class="song-img" />
             <div class="song-info">
-              <p class="song-title">${song.Name}</p>
+              <p class="song-title" onclick="event.stopPropagation(); window.openSongDetailFromQueue('album', ${index})">${song.Name}</p>
               <p class="song-artist">${song.Artist}</p>
               <p class="song-lyrics">${escapeHtml(getLyricsPreview(song))}</p>
             </div>
@@ -1579,6 +1617,53 @@ function renderSlide() {
     `;
     content.style.opacity = 1;
   }, 400);
+}
+
+function initSongDetailPage() {
+  const songRaw = localStorage.getItem("selectedSongDetail");
+  if (!songRaw) return;
+  const song = JSON.parse(songRaw);
+
+  const img = document.getElementById("detail-song-img");
+  const name = document.getElementById("detail-song-name");
+  const artist = document.getElementById("detail-song-artist");
+  const playBtn = document.getElementById("detail-play-main");
+  const likeBtn = document.getElementById("detail-like-main");
+
+  if (img) img.src = song.Img || "https://picsum.photos/600/600";
+  if (name) name.innerText = repairMojibake(song.Name);
+  if (artist) artist.innerText = repairMojibake(song.Artist);
+
+  if (playBtn) {
+    playBtn.onclick = () => {
+      playThisSong(song.Url, song.Name, song.Artist, song.Img, [song], 0);
+    };
+  }
+
+  if (likeBtn) {
+    const updateLikeUI = () => {
+      const isFav = window.isSongFavorite(song);
+      likeBtn.innerHTML = isFav
+        ? '<i class="bi bi-heart-fill"></i>'
+        : '<i class="bi bi-heart"></i>';
+      likeBtn.classList.toggle("active", isFav);
+    };
+    updateLikeUI();
+
+    likeBtn.onclick = () => {
+      const existingIndex = getFavoriteSongIndex(song);
+      if (existingIndex !== -1) favoriteSongs.splice(existingIndex, 1);
+      else favoriteSongs.unshift({ ...song });
+      saveFavoriteSongs();
+      updateLikeUI();
+      if (
+        currentSongMeta &&
+        normalizeSongKey(currentSongMeta) === normalizeSongKey(song)
+      ) {
+        setFavoriteButtonState(currentSongMeta);
+      }
+    };
+  }
 }
 
 function escapeHtml(value) {
