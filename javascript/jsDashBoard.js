@@ -1094,7 +1094,9 @@ async function loadTopGenres() {
   if (!container) return;
 
   // Render static data first so it's not empty
-  renderStaticHotSongs();
+  if (typeof renderStaticHotSongs === "function") {
+    renderStaticHotSongs();
+  }
 
   try {
     const songs = await getAllSongs();
