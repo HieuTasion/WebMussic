@@ -902,9 +902,3 @@ h6 {
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(0, 212, 170, 0.3);
 }
-
-/* Ẩn tất cả các nút hoặc liên kết Đăng ký trong Sidebar */
-.sidebar a[href*="register.html"],
-.sidebar .menu-item[onclick*="register.html"] {
-  display: none !important;
-}
