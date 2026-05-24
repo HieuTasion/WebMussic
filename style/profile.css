@@ -40,7 +40,7 @@ a {
 
 .profile-page {
   min-height: 100vh;
-  padding: 28px;
+  padding: 28px 28px 120px;
 }
 
 .profile-shell {
@@ -362,7 +362,7 @@ a {
 
 @media (max-width: 640px) {
   .profile-page {
-    padding: 14px;
+    padding: 14px 14px 110px;
   }
 
   .hero-top,

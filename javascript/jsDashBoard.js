@@ -1246,6 +1246,201 @@ function renderFavoritesPage() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function buildForYouInsights(library, favorites, recent) {
+  const interacted = [...favorites, ...recent];
+  const genreWeights = new Map();
+  const artistWeights = new Map();
+  const seenKeys = new Set(interacted.map((song) => normalizeSongKey(song)));
+
+  interacted.forEach((song, index) => {
+    const boost = index < favorites.length ? 3 : 2;
+    const genre = normalizeGenre(song?.Genre || "");
+    const artist = repairMojibake(song?.Artist || "").trim();
+
+    if (genre) {
+      genreWeights.set(genre, (genreWeights.get(genre) || 0) + boost);
+    }
+
+    if (artist) {
+      artistWeights.set(artist, (artistWeights.get(artist) || 0) + boost);
+    }
+  });
+
+  const topGenre =
+    [...genreWeights.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || "Pop";
+  const topArtist =
+    [...artistWeights.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ||
+    "Nghe gi cung duoc";
+
+  const scored = library
+    .map((song) => {
+      const genre = normalizeGenre(song?.Genre || "");
+      const artist = repairMojibake(song?.Artist || "").trim();
+      const key = normalizeSongKey(song);
+      let score = 0;
+
+      if (genreWeights.has(genre)) score += genreWeights.get(genre) * 10;
+      if (artistWeights.has(artist)) score += artistWeights.get(artist) * 12;
+      if (!seenKeys.has(key)) score += 8;
+      score += Math.min(Number(song?.Likes || 0) / 50, 25);
+      score += Math.min(Number(song?.Count || 0) / 120, 25);
+
+      return { song, score };
+    })
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.song);
+
+  const mainPicks = scored.slice(0, 6);
+  const genreMix = scored
+    .filter((song) => normalizeGenre(song?.Genre || "") === topGenre)
+    .slice(0, 2);
+  const artistMix = scored
+    .filter((song) => repairMojibake(song?.Artist || "").trim() === topArtist)
+    .slice(0, 2);
+
+  return {
+    topGenre,
+    topArtist,
+    mainPicks,
+    mixes: [
+      {
+        title: `Mix ${topGenre} cho ban`,
+        description: "Nhung bai cung mood va de vao tai nhat tu gu nghe hien tai.",
+        songs: genreMix.length ? genreMix : mainPicks.slice(0, 2),
+      },
+      {
+        title: `Giu nhip cung ${topArtist}`,
+        description: "Mot cum bai theo nghe si ban co xu huong quay lai nhieu.",
+        songs: artistMix.length ? artistMix : mainPicks.slice(2, 4),
+      },
+    ],
+  };
+}
+
+function renderForYouSongCards(songs, queueName) {
+  if (!songs.length) {
+    return `
+      <div class="for-you-empty">
+        Mo them vai bai hat, thich vai bai nua roi quay lai day, goi y se day dan va hop gu hon.
+      </div>
+    `;
+  }
+
+  window[queueName] = songs;
+
+  return songs
+    .map(
+      (song, index) => `
+        <article class="for-you-song-card">
+          <img class="for-you-song-cover" src="${escapeHtml(song.Img || "https://picsum.photos/240/240")}" alt="${escapeHtml(song.Name || "Bai hat")}" />
+          <div>
+            <h3>${escapeHtml(repairMojibake(song.Name || "Chua co ten"))}</h3>
+            <p class="for-you-meta">${escapeHtml(repairMojibake(song.Artist || "Dang cap nhat nghe si"))}</p>
+            <p class="for-you-meta">${escapeHtml(normalizeGenre(song.Genre || "Khac"))} • ${escapeHtml(song.Times || "Dang cap nhat")}</p>
+          </div>
+          <div class="for-you-song-actions">
+            <button class="for-you-btn primary" type="button" onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.${queueName}, ${index})">
+              <i class="bi bi-play-fill"></i> Phat
+            </button>
+            <button class="for-you-btn" type="button" onclick="window.openSongDetail(window.${queueName}[${index}])">
+              Chi tiet
+            </button>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderForYouMixCards(mixes) {
+  return mixes
+    .map((mix, index) => {
+      const firstSong = mix.songs[0];
+      const secondSong = mix.songs[1] || mix.songs[0];
+      const queueName = `__forYouMixQueue${index}`;
+      window[queueName] = mix.songs;
+
+      if (!firstSong) {
+        return `<div class="for-you-empty">Chua du du lieu de tao mix nay.</div>`;
+      }
+
+      return `
+        <article class="for-you-mix-card">
+          <img class="for-you-mix-cover" src="${escapeHtml(firstSong.Img || "https://picsum.photos/220/220")}" alt="${escapeHtml(firstSong.Name || "Mix")}">
+          <div>
+            <h3>${escapeHtml(mix.title)}</h3>
+            <p class="for-you-meta">${escapeHtml(mix.description)}</p>
+            <p class="for-you-meta">${escapeHtml(repairMojibake(firstSong.Name || ""))}${secondSong ? ` • ${escapeHtml(repairMojibake(secondSong.Name || ""))}` : ""}</p>
+            <div class="for-you-song-actions">
+              <button class="for-you-btn primary" type="button" onclick="playThisSong('${escapeJsString(firstSong.Url)}', '${escapeJsString(firstSong.Name)}', '${escapeJsString(firstSong.Artist)}', '${escapeJsString(firstSong.Img)}', window.${queueName}, 0)">
+                <i class="bi bi-play-circle-fill"></i> Bat dau mix
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+async function initForYouPage() {
+  const contentArea = document.getElementById("main-content");
+  if (!contentArea) return;
+
+  contentArea.dataset.view = "for-you";
+  contentArea.classList.remove("page-genre", "page-player", "page-lyrics");
+  contentArea.classList.add("page-home");
+
+  const library = await getAllSongs();
+  const favorites = loadFavoriteSongs();
+  const recent = loadRecentlyPlayedSongs();
+  const insights = buildForYouInsights(library, favorites, recent);
+
+  const topGenre = document.getElementById("for-you-top-genre");
+  const topArtist = document.getElementById("for-you-top-artist");
+  const count = document.getElementById("for-you-count");
+  const note = document.getElementById("for-you-note");
+  const title = document.getElementById("for-you-title");
+  const desc = document.getElementById("for-you-description");
+  const mainGrid = document.getElementById("for-you-main-grid");
+  const mixGrid = document.getElementById("for-you-mix-grid");
+
+  if (topGenre) topGenre.textContent = insights.topGenre;
+  if (topArtist) topArtist.textContent = insights.topArtist;
+  if (count) count.textContent = String(insights.mainPicks.length);
+
+  if (title) {
+    title.textContent = favorites.length || recent.length
+      ? `Hom nay nghe thu vai bai hop gu ${insights.topGenre.toLowerCase()} cua ban`
+      : "Chua co du lieu ca nhan? Day la mix de bat dau";
+  }
+
+  if (desc) {
+    desc.textContent = favorites.length || recent.length
+      ? "Nhung goi y nay duoc lay tu bai ban da luu, da nghe va tu gu the loai xuat hien nhieu nhat."
+      : "Ban chua nghe nhieu nen minh tam goi y cac bai de vao tai va de bat dau xay gu.";
+  }
+
+  if (note) {
+    note.textContent = favorites.length || recent.length
+      ? `The loai noi len nhieu nhat hien tai la ${insights.topGenre}, nen minh day uu tien nhung bai cung mood.`
+      : "Them bai vao yeu thich hoac nghe them de trang nay ca nhan hoa manh hon.";
+  }
+
+  if (mainGrid) {
+    mainGrid.innerHTML = renderForYouSongCards(
+      insights.mainPicks,
+      "__forYouMainQueue",
+    );
+  }
+
+  if (mixGrid) {
+    mixGrid.innerHTML = renderForYouMixCards(insights.mixes);
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function renderRecentlyPlayedPage() {
   const contentArea = document.getElementById("main-content");
   if (!contentArea) return;
@@ -1445,6 +1640,11 @@ window.loadPage = function (pageUrl) {
         loadHotSongs();
         loadTopGenres();
         initDashboardSongSearch();
+      }
+
+      if (normalizedPage === "ForYou.html") {
+        contentArea.classList.add("page-home");
+        initForYouPage();
       }
 
       if (normalizedPage === "SongDetail.html") {

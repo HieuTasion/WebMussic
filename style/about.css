@@ -1,0 +1,287 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg: #09111f;
+  --bg-soft: #0f1b31;
+  --panel: rgba(11, 24, 43, 0.92);
+  --panel-strong: rgba(14, 31, 54, 0.96);
+  --line: rgba(0, 212, 170, 0.16);
+  --line-strong: rgba(0, 212, 170, 0.28);
+  --text: #d8ebff;
+  --muted: #7b98b8;
+  --accent: #00d4aa;
+  --accent-2: #7fffe0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(0, 212, 170, 0.15), transparent 26%),
+    radial-gradient(circle at right, rgba(31, 72, 120, 0.22), transparent 30%),
+    linear-gradient(145deg, #09111f, #050913 72%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.about-page {
+  min-height: 100vh;
+  padding: 28px 28px 120px;
+}
+
+.about-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+
+.page-top,
+.hero-card,
+.member-card,
+.info-card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--panel);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+.page-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.page-top h1,
+.hero-copy h2,
+.section-head h2,
+.info-card h3,
+.member-card h3 {
+  margin: 0;
+}
+
+.page-top h1 {
+  max-width: 720px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.page-copy {
+  max-width: 640px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.top-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: inherit;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(15, 30, 53, 0.74);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.ghost-btn:hover {
+  transform: translateY(-1px);
+  color: var(--accent);
+  border-color: var(--line-strong);
+  background: rgba(0, 212, 170, 0.08);
+}
+
+.hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: 18px;
+  padding: 28px;
+  background:
+    linear-gradient(135deg, rgba(0, 212, 170, 0.08), transparent 45%),
+    var(--panel-strong);
+}
+
+.hero-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 212, 170, 0.12);
+  color: var(--accent-2);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.hero-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.hero-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-self: center;
+}
+
+.point-card {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(6, 14, 26, 0.62);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+.point-card strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+.point-card span,
+.member-card p,
+.info-card p {
+  color: var(--muted);
+}
+
+.team-section {
+  display: grid;
+  gap: 18px;
+}
+
+.section-head {
+  display: grid;
+  gap: 10px;
+}
+
+.team-grid,
+.story-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.team-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.member-card,
+.info-card {
+  padding: 24px;
+}
+
+.member-card {
+  display: grid;
+  gap: 12px;
+}
+
+.member-avatar {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent), #159f96);
+  color: #031119;
+  font-weight: 800;
+}
+
+.role {
+  margin: -4px 0 0;
+  color: var(--accent) !important;
+  font-weight: 700;
+}
+
+.member-card p,
+.info-card p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.story-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.info-card h3 {
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+@media (max-width: 980px) {
+  .page-top {
+    flex-direction: column;
+  }
+
+  .top-actions {
+    justify-content: flex-start;
+  }
+
+  .hero-card,
+  .team-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .about-page {
+    padding: 16px 16px 110px;
+  }
+
+  .page-top,
+  .hero-card,
+  .member-card,
+  .info-card {
+    border-radius: 20px;
+  }
+
+  .hero-card,
+  .hero-points,
+  .team-grid,
+  .story-grid {
+    grid-template-columns: 1fr;
+  }
+}
