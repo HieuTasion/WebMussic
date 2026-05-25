@@ -13,6 +13,7 @@ const LYRICS_API_URL = "https://68ef6d3fb06cc802829d58ca.mockapi.io/songs";
 //   "Loi_bai_hat",
 //   "loi_bai_hat",
 // ];
+const LRC_TIMESTAMP_REGEX = /\[(\d{2}):(\d{2})(?:[.:](\d{1,3}))?\]/g;
 
 const SONG_LYRIC_TUNING = {
   1: { leadIn: 4.2, tailOut: 3.6, shift: -0.18, lineScale: 1.04 },
@@ -55,6 +56,68 @@ let lyricsSyncState = {
   activeIndex: -1,
   song: null,
 };
+
+function updateLyricsPlayButton(audio) {
+  const button = document.getElementById("lyrics-play-toggle");
+  const text = document.getElementById("lyrics-play-toggle-text");
+  const icon = button?.querySelector("i");
+  const isPlaying = Boolean(audio && !audio.paused && !audio.ended);
+
+  if (button) {
+    button.classList.toggle("is-paused", !isPlaying);
+    button.setAttribute(
+      "aria-label",
+      isPlaying ? "Tam dung nhac" : "Phat nhac",
+    );
+  }
+
+  if (text) {
+    text.textContent = isPlaying ? "Tam dung" : "Phat tiep";
+  }
+
+  if (icon) {
+    icon.className = isPlaying ? "bi bi-pause-fill" : "bi bi-play-fill";
+  }
+}
+
+function bindLyricsPlaybackControls(audio) {
+  const button = document.getElementById("lyrics-play-toggle");
+  if (!button) return () => {};
+
+  const syncButtonState = () => updateLyricsPlayButton(audio);
+  const togglePlayback = async () => {
+    if (!audio) return;
+
+    try {
+      if (audio.paused) {
+        await audio.play();
+      } else {
+        audio.pause();
+      }
+    } catch (error) {
+      console.error("Khong the thay doi trang thai phat nhac:", error);
+    }
+
+    syncButtonState();
+  };
+
+  button.onclick = togglePlayback;
+  syncButtonState();
+
+  if (audio) {
+    audio.addEventListener("play", syncButtonState);
+    audio.addEventListener("pause", syncButtonState);
+    audio.addEventListener("ended", syncButtonState);
+  }
+
+  return () => {
+    button.onclick = null;
+    if (!audio) return;
+    audio.removeEventListener("play", syncButtonState);
+    audio.removeEventListener("pause", syncButtonState);
+    audio.removeEventListener("ended", syncButtonState);
+  };
+}
 
 function getCurrentSongMeta() {
   try {
@@ -258,6 +321,24 @@ function formatTime(seconds) {
   return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
+function parseSongTimeToSeconds(timeText) {
+  const value = String(timeText || "").trim();
+  if (!value) return null;
+
+  const parts = value.split(":").map((part) => Number(part));
+  if (parts.some((part) => !Number.isFinite(part))) return null;
+
+  if (parts.length === 2) {
+    return parts[0] * 60 + parts[1];
+  }
+
+  if (parts.length === 3) {
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  }
+
+  return null;
+}
+
 async function hydrateSongWithLibrary(song) {
   if (!song) return null;
 
@@ -294,23 +375,39 @@ async function hydrateSongWithLibrary(song) {
 }
 
 function parseLrcFormat(lyricsText) {
-  const lrcRegex = /^\[(\d{2}):(\d{2})\.(\d{2,3})\](.*?)$/gm;
-  const matches = Array.from(String(lyricsText || "").matchAll(lrcRegex));
+  const rawLines = String(lyricsText || "")
+    .replace(/\r/g, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .split("\n");
 
-  if (matches.length === 0) return null;
+  let hasTiming = false;
+  const parsedLines = [];
 
-  return matches.map((match) => {
-    const minutes = parseInt(match[1], 10);
-    const seconds = parseInt(match[2], 10);
-    const milliseconds = parseInt(match[3].padEnd(3, "0"), 10);
-    const text = match[4].trim();
-    const timeInSeconds = minutes * 60 + seconds + milliseconds / 1000;
+  rawLines.forEach((rawLine) => {
+    const timestamps = Array.from(rawLine.matchAll(LRC_TIMESTAMP_REGEX));
+    const text = rawLine.replace(LRC_TIMESTAMP_REGEX, "").trim();
 
-    return {
-      time: timeInSeconds,
-      text: text,
-    };
+    if (!timestamps.length) {
+      parsedLines.push({ time: null, text });
+      return;
+    }
+
+    hasTiming = true;
+    timestamps.forEach((match) => {
+      const minutes = parseInt(match[1], 10);
+      const seconds = parseInt(match[2], 10);
+      const milliseconds = parseInt(String(match[3] || "0").padEnd(3, "0"), 10);
+
+      parsedLines.push({
+        time: minutes * 60 + seconds + milliseconds / 1000,
+        text,
+      });
+    });
   });
+
+  if (!hasTiming) return null;
+
+  return parsedLines;
 }
 
 function splitLyricsLines(lyricsText) {
@@ -407,41 +504,98 @@ function buildLyricsTimeline(song, lineNodes, audio) {
   if (!playableLines.length) return [];
 
   const tuning = getSongTuning(song);
-  const duration =
+  const audioDuration =
     Number.isFinite(audio?.duration) && audio.duration > 0 ? audio.duration : 0;
+  const fallbackDuration =
+    parseSongTimeToSeconds(song?.Times) || playableLines.length * 2.4;
+  const duration = Math.max(audioDuration, fallbackDuration);
 
-  // Check if lines have LRC timing data
   const lrcTimings = playableLines.map((line) => {
-    const text = line.innerText || "";
-    const lrcMatch = text.match(/^\[(\d{2}):(\d{2})\.(\d{2,3})\]/);
-    if (lrcMatch) {
-      const minutes = parseInt(lrcMatch[1], 10);
-      const seconds = parseInt(lrcMatch[2], 10);
-      const ms = parseInt(lrcMatch[3].padEnd(3, "0"), 10);
-      return minutes * 60 + seconds + ms / 1000;
-    }
-    return null;
+    const rawValue = Number(line.dataset.startTime);
+    return Number.isFinite(rawValue) ? rawValue : null;
   });
-
-  const hasLrcTiming = lrcTimings.some((t) => t !== null);
+  const hasLrcTiming = lrcTimings.some((time) => time !== null);
 
   if (hasLrcTiming) {
-    return playableLines.map((line, index) => {
-      let start =
-        lrcTimings[index] ??
-        (index === 0 ? 0 : (playableLines[index - 1]?.dataset?.endTime ?? 0));
-      let end = lrcTimings[index + 1] ?? start + 1.8;
+    const starts = [...lrcTimings];
+    const anchorIndices = starts.reduce((indices, time, index) => {
+      if (time !== null) indices.push(index);
+      return indices;
+    }, []);
 
-      if (lrcTimings[index] === null && index > 0) {
-        const prevTime = lrcTimings[index - 1];
-        start = prevTime ? prevTime + 1.8 : 0;
-        end = start + 1.8;
+    const clampStep = (step) => Math.max(0.9, Math.min(step, 6));
+
+    const fillLeadingUntimed = () => {
+      const firstAnchorIndex = anchorIndices[0];
+      if (!Number.isFinite(firstAnchorIndex) || firstAnchorIndex <= 0) return;
+
+      const firstAnchorTime = starts[firstAnchorIndex];
+      const step = clampStep(firstAnchorTime / (firstAnchorIndex + 1 || 1));
+
+      for (let index = firstAnchorIndex - 1; index >= 0; index -= 1) {
+        starts[index] = Math.max(0, firstAnchorTime - step * (firstAnchorIndex - index));
       }
+    };
+
+    const fillMiddleUntimed = () => {
+      for (let anchorCursor = 0; anchorCursor < anchorIndices.length - 1; anchorCursor += 1) {
+        const prevIndex = anchorIndices[anchorCursor];
+        const nextIndex = anchorIndices[anchorCursor + 1];
+        const missingCount = nextIndex - prevIndex - 1;
+        if (missingCount <= 0) continue;
+
+        const prevTime = starts[prevIndex];
+        const nextTime = starts[nextIndex];
+        const step = clampStep((nextTime - prevTime) / (missingCount + 1));
+
+        for (let offset = 1; offset <= missingCount; offset += 1) {
+          starts[prevIndex + offset] = prevTime + step * offset;
+        }
+      }
+    };
+
+    const fillTrailingUntimed = () => {
+      const lastAnchorIndex = anchorIndices[anchorIndices.length - 1];
+      if (!Number.isFinite(lastAnchorIndex) || lastAnchorIndex >= starts.length - 1) {
+        return;
+      }
+
+      const trailingCount = starts.length - lastAnchorIndex - 1;
+      const lastAnchorTime = starts[lastAnchorIndex];
+      const remainingWindow = Math.max(duration - lastAnchorTime, trailingCount * 1.8);
+      const step = clampStep(remainingWindow / (trailingCount + 1));
+
+      for (let offset = 1; offset <= trailingCount; offset += 1) {
+        starts[lastAnchorIndex + offset] = lastAnchorTime + step * offset;
+      }
+    };
+
+    fillLeadingUntimed();
+    fillMiddleUntimed();
+    fillTrailingUntimed();
+
+    for (let index = 0; index < starts.length; index += 1) {
+      if (starts[index] === null) {
+        const previous = index > 0 && Number.isFinite(starts[index - 1]) ? starts[index - 1] : 0;
+        starts[index] = previous + 1.8;
+      }
+
+      if (index > 0 && starts[index] <= starts[index - 1]) {
+        starts[index] = starts[index - 1] + 0.2;
+      }
+    }
+
+    return playableLines.map((line, index) => {
+      const start = starts[index];
+      const nextStart = starts[index + 1];
+      const fallbackEnd = index === starts.length - 1
+        ? Math.max(duration, start + 1.8)
+        : start + 2;
 
       return {
         element: line,
-        start: Math.max(0, start + tuning.shift),
-        end: Math.max(start + 0.8, end + tuning.shift),
+        start,
+        end: Math.max(start + 0.75, Number.isFinite(nextStart) ? nextStart : fallbackEnd),
       };
     });
   }
@@ -570,9 +724,12 @@ function bindLyricsToAudio(song) {
   lyricsSyncState.timeline = buildLyricsTimeline(song, lineNodes, audio);
   lyricsSyncState.currentKey = `${song.Url || ""}__${song.Name || ""}`;
   lyricsSyncState.song = song;
+  const cleanupPlaybackControls = bindLyricsPlaybackControls(audio);
 
   if (!audio || !lyricsSyncState.timeline.length) {
     updateProgressLabel(null);
+    updateLyricsPlayButton(audio);
+    lyricsSyncState.cleanup = cleanupPlaybackControls;
     return;
   }
 
@@ -603,6 +760,7 @@ function bindLyricsToAudio(song) {
   audio.addEventListener("ended", handleEnded);
 
   lyricsSyncState.cleanup = () => {
+    cleanupPlaybackControls();
     audio.removeEventListener("timeupdate", syncLyrics);
     audio.removeEventListener("loadedmetadata", handleMetadata);
     audio.removeEventListener("durationchange", handleMetadata);
@@ -612,6 +770,7 @@ function bindLyricsToAudio(song) {
   };
 
   handleMetadata();
+  updateLyricsPlayButton(audio);
 }
 
 function renderLyrics(song) {
@@ -648,8 +807,12 @@ function renderLyrics(song) {
         ${lines
           .map((line) => {
             const text = isLrcFormat ? line.text : line;
+            const timeAttr =
+              isLrcFormat && Number.isFinite(line.time)
+                ? ` data-start-time="${line.time}"`
+                : "";
             return text
-              ? `<p class="lyric-line is-upcoming">${escapeHtml(text)}</p>`
+              ? `<p class="lyric-line is-upcoming"${timeAttr}>${escapeHtml(text)}</p>`
               : '<p class="lyric-line is-empty">&nbsp;</p>';
           })
           .join("")}
@@ -699,6 +862,7 @@ function renderNoSongState() {
 
   if (source) source.innerText = "Không có bài";
   if (progressLabel) progressLabel.innerText = "00:00 / 00:00";
+  updateLyricsPlayButton(null);
 }
 
 function escapeHtml(value) {

@@ -1,5 +1,6 @@
 const CURRENT_USER_KEY = "harmonix_current_user";
 const SETTINGS_KEY = "harmonix_ui_settings";
+const SETTINGS_VOLUME_EVENT = "harmonix:volume-changed";
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getCurrentUser();
@@ -57,7 +58,10 @@ function bindSettingsForm(user, settings) {
   const volumeInput = document.getElementById("settings-volume");
   if (volumeInput) {
     volumeInput.addEventListener("input", () => {
-      updateVolumeLabel(Number(volumeInput.value));
+      const nextVolume = clampVolume(Number(volumeInput.value));
+      updateVolumeLabel(nextVolume);
+      applyVolumeSetting(nextVolume, true);
+      settings.volume = nextVolume;
     });
   }
 
@@ -91,7 +95,8 @@ function bindSettingsForm(user, settings) {
       rememberView: isChecked("settings-remember-view"),
     };
 
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(nextSettings));
+    persistSettings(nextSettings);
+    applyVolumeSetting(nextSettings.volume, true);
 
     if (user) {
       const updatedUser = { ...user };
@@ -119,6 +124,7 @@ function applySettingsState(settings) {
   document.body.classList.toggle("compact-mode", settings.compact === true);
   document.body.classList.toggle("neon-off", settings.neon === false);
   updateVolumeLabel(Number(settings.volume ?? 80));
+  applyVolumeSetting(Number(settings.volume ?? 80), false);
 }
 
 function updateVolumeLabel(value) {
@@ -128,6 +134,36 @@ function updateVolumeLabel(value) {
 function clampVolume(value) {
   if (!Number.isFinite(value)) return 80;
   return Math.min(100, Math.max(0, Math.round(value)));
+}
+
+function persistSettings(settings) {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function applyVolumeSetting(value, shouldPersist) {
+  const nextVolume = clampVolume(value);
+
+  if (shouldPersist) {
+    const currentSettings = getStoredSettings();
+    persistSettings({
+      ...currentSettings,
+      volume: nextVolume,
+    });
+  }
+
+  document.querySelectorAll("audio").forEach((audio) => {
+    audio.volume = nextVolume / 100;
+  });
+
+  try {
+    window.dispatchEvent(
+      new CustomEvent(SETTINGS_VOLUME_EVENT, {
+        detail: { volume: nextVolume },
+      }),
+    );
+  } catch (error) {
+    // ignore
+  }
 }
 
 function getNameFromEmail(email) {

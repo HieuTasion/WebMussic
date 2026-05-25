@@ -13,6 +13,7 @@ let dashboardSearchSelectedSong = null;
 let playerAutoAdvanceLock = false;
 let favoriteSongs = loadFavoriteSongs();
 const CURRENT_USER_KEY = "harmonix_current_user";
+const SETTINGS_KEY = "harmonix_ui_settings";
 const RECENTLY_PLAYED_LIMIT = 25;
 const LYRICS_SNAPSHOT_KEY = "harmonix_lyrics_snapshot";
 const LYRICS_FIELD_CANDIDATES = [
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   tidyDashboardSystemMenu();
   syncProtectedLibraryMenuState();
   initPlayerControls();
+  bindDashboardSettingsSync();
   loadPage("Home.html");
 
   // Mobile sidebar toggle
@@ -182,6 +184,8 @@ function initPlayerControls() {
 
   if (!audio || !playPauseBtn) return;
 
+  applySavedVolumeToPlayer();
+
   audio.addEventListener("play", () => {
     persistCurrentSongMetaFromPlayer();
   });
@@ -252,7 +256,8 @@ function initPlayerControls() {
 
   if (volumeBar) {
     volumeBar.oninput = () => {
-      audio.volume = volumeBar.value / 100;
+      const nextVolume = clampVolumeLevel(Number(volumeBar.value));
+      applyVolumeToDashboardPlayer(nextVolume, true);
 
       if (!volumeIcon) return;
       volumeIcon.innerHTML =
@@ -261,6 +266,77 @@ function initPlayerControls() {
           : '<i class="bi bi-volume-mute-fill"></i>';
     };
   }
+}
+
+function getStoredUiSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function clampVolumeLevel(value) {
+  if (!Number.isFinite(value)) return 80;
+  return Math.min(100, Math.max(0, Math.round(value)));
+}
+
+function syncDashboardVolumeIcon(volume = audio?.volume || 0) {
+  if (!volumeIcon) return;
+  volumeIcon.innerHTML =
+    volume > 0.05
+      ? '<i class="bi bi-volume-up-fill"></i>'
+      : '<i class="bi bi-volume-mute-fill"></i>';
+}
+
+function applyVolumeToDashboardPlayer(volumePercent, shouldPersist = false) {
+  const nextVolume = clampVolumeLevel(volumePercent);
+
+  if (audio) {
+    audio.volume = nextVolume / 100;
+  }
+
+  if (volumeBar) {
+    volumeBar.value = String(nextVolume);
+  }
+
+  syncDashboardVolumeIcon((audio?.volume ?? nextVolume / 100));
+
+  if (!shouldPersist) return;
+
+  const currentSettings = getStoredUiSettings();
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify({
+      ...currentSettings,
+      volume: nextVolume,
+    }),
+  );
+}
+
+function applySavedVolumeToPlayer() {
+  const settings = getStoredUiSettings();
+  applyVolumeToDashboardPlayer(
+    clampVolumeLevel(Number(settings.volume ?? 80)),
+    false,
+  );
+}
+
+function bindDashboardSettingsSync() {
+  window.addEventListener("storage", (event) => {
+    if (event.key === SETTINGS_KEY) {
+      applySavedVolumeToPlayer();
+    }
+  });
+
+  window.addEventListener("harmonix:volume-changed", (event) => {
+    applyVolumeToDashboardPlayer(
+      clampVolumeLevel(Number(event?.detail?.volume ?? 80)),
+      false,
+    );
+  });
 }
 
 function persistCurrentSongMetaFromPlayer() {
@@ -551,13 +627,21 @@ function parseSongTimeToSeconds(timeText) {
 
 function getPreferredSongDuration(song = currentSongMeta, player = audio) {
   const songDuration = parseSongTimeToSeconds(song?.Times);
-  if (Number.isFinite(songDuration) && songDuration > 0) {
-    return songDuration;
+  const audioDuration = Number(player?.duration);
+  const hasSongDuration = Number.isFinite(songDuration) && songDuration > 0;
+  const hasAudioDuration = Number.isFinite(audioDuration) && audioDuration > 0;
+
+  if (hasSongDuration && hasAudioDuration) {
+    // Avoid cutting tracks early when API duration is shorter than the real file.
+    return Math.max(songDuration, audioDuration);
   }
 
-  const audioDuration = Number(player?.duration);
-  if (Number.isFinite(audioDuration) && audioDuration > 0) {
+  if (hasAudioDuration) {
     return audioDuration;
+  }
+
+  if (hasSongDuration) {
+    return songDuration;
   }
 
   return 0;
