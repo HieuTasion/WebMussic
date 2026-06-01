@@ -110,6 +110,14 @@ function bindLyricsPlaybackControls(audio) {
     audio.addEventListener("ended", syncButtonState);
   }
 
+  // Thêm sự kiện tua nhạc cho thanh progress trong trang Lyric
+  const progressBar = document.getElementById("lyrics-progress-bar");
+  if (progressBar && audio) {
+    progressBar.oninput = () => {
+      audio.currentTime = (progressBar.value / 100) * audio.duration;
+    };
+  }
+
   return () => {
     button.onclick = null;
     if (!audio) return;
@@ -533,12 +541,19 @@ function buildLyricsTimeline(song, lineNodes, audio) {
       const step = clampStep(firstAnchorTime / (firstAnchorIndex + 1 || 1));
 
       for (let index = firstAnchorIndex - 1; index >= 0; index -= 1) {
-        starts[index] = Math.max(0, firstAnchorTime - step * (firstAnchorIndex - index));
+        starts[index] = Math.max(
+          0,
+          firstAnchorTime - step * (firstAnchorIndex - index),
+        );
       }
     };
 
     const fillMiddleUntimed = () => {
-      for (let anchorCursor = 0; anchorCursor < anchorIndices.length - 1; anchorCursor += 1) {
+      for (
+        let anchorCursor = 0;
+        anchorCursor < anchorIndices.length - 1;
+        anchorCursor += 1
+      ) {
         const prevIndex = anchorIndices[anchorCursor];
         const nextIndex = anchorIndices[anchorCursor + 1];
         const missingCount = nextIndex - prevIndex - 1;
@@ -556,13 +571,19 @@ function buildLyricsTimeline(song, lineNodes, audio) {
 
     const fillTrailingUntimed = () => {
       const lastAnchorIndex = anchorIndices[anchorIndices.length - 1];
-      if (!Number.isFinite(lastAnchorIndex) || lastAnchorIndex >= starts.length - 1) {
+      if (
+        !Number.isFinite(lastAnchorIndex) ||
+        lastAnchorIndex >= starts.length - 1
+      ) {
         return;
       }
 
       const trailingCount = starts.length - lastAnchorIndex - 1;
       const lastAnchorTime = starts[lastAnchorIndex];
-      const remainingWindow = Math.max(duration - lastAnchorTime, trailingCount * 1.8);
+      const remainingWindow = Math.max(
+        duration - lastAnchorTime,
+        trailingCount * 1.8,
+      );
       const step = clampStep(remainingWindow / (trailingCount + 1));
 
       for (let offset = 1; offset <= trailingCount; offset += 1) {
@@ -576,7 +597,10 @@ function buildLyricsTimeline(song, lineNodes, audio) {
 
     for (let index = 0; index < starts.length; index += 1) {
       if (starts[index] === null) {
-        const previous = index > 0 && Number.isFinite(starts[index - 1]) ? starts[index - 1] : 0;
+        const previous =
+          index > 0 && Number.isFinite(starts[index - 1])
+            ? starts[index - 1]
+            : 0;
         starts[index] = previous + 1.8;
       }
 
@@ -588,14 +612,18 @@ function buildLyricsTimeline(song, lineNodes, audio) {
     return playableLines.map((line, index) => {
       const start = starts[index];
       const nextStart = starts[index + 1];
-      const fallbackEnd = index === starts.length - 1
-        ? Math.max(duration, start + 1.8)
-        : start + 2;
+      const fallbackEnd =
+        index === starts.length - 1
+          ? Math.max(duration, start + 1.8)
+          : start + 2;
 
       return {
         element: line,
         start,
-        end: Math.max(start + 0.75, Number.isFinite(nextStart) ? nextStart : fallbackEnd),
+        end: Math.max(
+          start + 0.75,
+          Number.isFinite(nextStart) ? nextStart : fallbackEnd,
+        ),
       };
     });
   }
@@ -638,9 +666,15 @@ function buildLyricsTimeline(song, lineNodes, audio) {
 
 function updateProgressLabel(audio) {
   const progressLabel = document.getElementById("lyrics-progress-label");
+  const progressBar = document.getElementById("lyrics-progress-bar");
   if (!progressLabel || !audio) return;
 
   progressLabel.innerText = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+
+  // Cập nhật vị trí thanh progress theo nhạc đang phát
+  if (progressBar && audio.duration) {
+    progressBar.value = (audio.currentTime / audio.duration) * 100;
+  }
 }
 
 function setActiveLine(audio) {

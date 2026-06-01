@@ -6,6 +6,230 @@
     <title>Lyrics - NVNP Music</title>
     <link rel="stylesheet" href="../style/styleDashBoard.css" />
     <link rel="stylesheet" href="../style/styleLyrics.css" />
+    <style>
+      /* Reset & Layout Fix */
+      .lyrics-page {
+        min-height: 100vh;
+        width: 100vw;
+        background: linear-gradient(180deg, #0a0e1a 0%, #0f1629 100%);
+        color: #d0e8ff;
+        overflow-y: auto; /* Cho phép cuộn trang toàn cục */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 0;
+      }
+
+      .lyrics-shell {
+        width: 100%;
+        max-width: 1400px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0 40px;
+      }
+
+      /* Thu gọn Topbar */
+      .lyrics-topbar {
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(0, 212, 170, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .back-btn {
+        background: rgba(0, 212, 170, 0.1);
+        border: 1px solid rgba(0, 212, 170, 0.2);
+        color: #00d4aa;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .back-btn:hover {
+        background: #00d4aa;
+        color: #0a0e1a;
+      }
+
+      /* Sắp xếp Stage (Sidebar + Panel) */
+      .lyrics-stage {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 60px;
+        margin-bottom: 30px;
+        align-items: stretch;
+      }
+
+      .lyrics-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 20px;
+      }
+
+      .lyrics-cover-wrap {
+        width: 280px;
+        margin: 0;
+        aspect-ratio: 1/1;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .lyrics-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .lyrics-meta h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: #fff;
+      }
+
+      .lyrics-artist {
+        font-size: 1.2rem;
+        color: #00d4aa;
+        margin-bottom: 12px;
+      }
+
+      /* Thiết kế lại Footer phát nhạc ngang */
+      .lyrics-footer {
+        width: 100%;
+        margin-top: auto;
+        background: rgba(15, 22, 41, 0.85);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 212, 170, 0.25);
+        border-radius: 32px;
+        padding: 15px 35px 20px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .lyrics-progress-container {
+        width: 100%;
+        margin-bottom: 12px;
+      }
+
+      .lyrics-progress-bar {
+        width: 100%;
+        height: 6px;
+
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .lyrics-progress-bar::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        background: #00d4aa;
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(0, 212, 170, 0.6);
+        cursor: pointer;
+      }
+
+      .lyrics-control-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .lyrics-source-wrap {
+        font-size: 0.75rem;
+        color: rgba(208, 232, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+
+      .lyrics-actions-group {
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Nút kế bên thời gian */
+      }
+
+      .lyrics-progress-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.1rem;
+        color: #00d4aa;
+        font-weight: 700;
+        min-width: 110px;
+      }
+
+      .lyrics-control-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: none;
+        background: #00d4aa;
+        color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(0, 212, 170, 0.3);
+      }
+
+      .lyrics-control-btn:hover {
+        background: #00f5c4;
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+      }
+
+      /* Panel Lời bài hát */
+      .lyrics-panel {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .lyrics-content {
+        flex: 1;
+        max-height: 65vh; /* Giới hạn chiều cao để không đẩy footer đi quá xa */
+        overflow-y: auto;
+        padding-right: 15px;
+        scroll-behavior: smooth;
+      }
+
+      /* Thiết kế thanh cuộn Cyan Neon toàn cục */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #00d4aa;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+        box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+      }
+
+      .lyric-line {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 24px 0;
+        transition: all 0.4s ease;
+      }
+    </style>
   </head>
   <body>
     <div class="lyrics-page">
@@ -33,21 +257,6 @@
               </p>
               <div class="lyrics-subline" id="lyrics-subline"></div>
             </div>
-            <div class="lyrics-status-row">
-              <span id="lyrics-source" class="panel-source">Tu dong tai</span>
-              <span id="lyrics-progress-label" class="lyrics-progress-label"
-                >00:00 / 00:00</span
-              >
-              <button
-                id="lyrics-play-toggle"
-                class="lyrics-control-btn"
-                type="button"
-                aria-label="Phat hoac tam dung nhac"
-                title="Phat hoac tam dung nhac"
-              >
-                <i class="bi bi-pause-fill"></i>
-              </button>
-            </div>
           </aside>
 
           <section class="lyrics-panel">
@@ -59,6 +268,36 @@
             </div>
           </section>
         </section>
+
+        <footer class="lyrics-footer">
+          <div class="lyrics-progress-container">
+            <input
+              type="range"
+              id="lyrics-progress-bar"
+              class="lyrics-progress-bar"
+              min="0"
+              max="100"
+              value="0"
+            />
+          </div>
+          <div class="lyrics-control-row">
+            <div class="lyrics-source-wrap" id="lyrics-source">
+              Tự động tải lời
+            </div>
+            <div class="lyrics-actions-group">
+              <button
+                id="lyrics-play-toggle"
+                class="lyrics-control-btn"
+                type="button"
+              >
+                <i class="bi bi-pause-fill"></i>
+              </button>
+              <span id="lyrics-progress-label" class="lyrics-progress-label"
+                >00:00 / 00:00</span
+              >
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
 
