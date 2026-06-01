@@ -14,6 +14,10 @@
       rel="stylesheet"
     />
     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
@@ -24,6 +28,44 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="../style/styleTheLoaiNhac.css" />
+    <style>
+      :root {
+        --bg-midnight: #0f1629; /* Màu nền chính của Dashboard */
+        --accent-cyan: #00d4aa;
+        --accent-hover: #00f5c4;
+        --card-dark: #0f1e35;
+        --text-bright: #d0e8ff;
+      }
+
+      body {
+        background-color: #0f1629 !important;
+        color: var(--text-bright);
+      }
+
+      .hero-section {
+        background: linear-gradient(135deg, #0f1e35, #050a15) !important;
+        border-bottom: 1px solid rgba(0, 212, 170, 0.15);
+      }
+
+      .gradient-text {
+        background: linear-gradient(
+          120deg,
+          #00d4aa,
+          #00f5c4,
+          #80ffea
+        ) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        color: transparent !important;
+      }
+
+      .filter-chip.active {
+        background: var(--accent-cyan) !important;
+        color: #0f1629 !important;
+        border-color: var(--accent-cyan) !important;
+        box-shadow: 0 0 15px rgba(0, 212, 170, 0.4);
+      }
+    </style>
   </head>
   <body>
     <!-- Hero Section -->
@@ -64,40 +106,38 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="filter-wrapper">
-      <div class="filter-container" id="filterContainer">
-        <button class="filter-chip active" data-filter="all">
+    <div class="filter-wrapper py-3">
+      <div
+        class="container d-flex flex-wrap justify-content-center gap-2"
+        id="filterContainer"
+      >
+        <button class="filter-chip btn rounded-pill active" data-filter="all">
           <i class="fas fa-music"></i> Tất cả
         </button>
-        <button class="filter-chip" data-filter="vui-tuoi">
+        <button class="filter-chip btn rounded-pill" data-filter="vui-tuoi">
           <i class="fas fa-smile-beam"></i> Vui tươi
         </button>
-        <button class="filter-chip" data-filter="manh-me">
+        <button class="filter-chip btn rounded-pill" data-filter="manh-me">
           <i class="fas fa-fist-raised"></i> Mạnh mẽ
         </button>
-        <button class="filter-chip" data-filter="sau-lang">
+        <button class="filter-chip btn rounded-pill" data-filter="sau-lang">
           <i class="fas fa-moon"></i> Sâu lắng
         </button>
-        <button class="filter-chip" data-filter="nang-luong">
+        <button class="filter-chip btn rounded-pill" data-filter="nang-luong">
           <i class="fas fa-bolt"></i> Năng lượng
         </button>
       </div>
     </div>
 
     <!-- Genres Grid Section -->
-    <div class="genres-container">
-      <div
-        class="section-title"
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-        <h2><i class="fas fa-album-collection"></i> Danh mục thể loại</h2>
-
-        <p>Khám phá những dòng nhạc đa dạng từ khắp nơi trên thế giới</p>
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">
+          <i class="fas fa-album-collection me-2"></i>Danh mục thể loại
+        </h2>
+        <p class="text-white">
+          Khám phá những dòng nhạc đa dạng từ khắp nơi trên thế giới
+        </p>
       </div>
       <div class="genres-grid" id="genresGrid"></div>
     </div>

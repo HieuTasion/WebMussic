@@ -67,12 +67,12 @@ function updateLyricsPlayButton(audio) {
     button.classList.toggle("is-paused", !isPlaying);
     button.setAttribute(
       "aria-label",
-      isPlaying ? "Tam dung nhac" : "Phat nhac",
+      isPlaying ? "Tạm dừng nhạc" : "Phát nhạc",
     );
   }
 
   if (text) {
-    text.textContent = isPlaying ? "Tam dung" : "Phat tiep";
+    text.textContent = isPlaying ? "Tạm dừng" : "Phát tiếp";
   }
 
   if (icon) {
@@ -95,7 +95,7 @@ function bindLyricsPlaybackControls(audio) {
         audio.pause();
       }
     } catch (error) {
-      console.error("Khong the thay doi trang thai phat nhac:", error);
+      console.error("Không thể thay đổi trạng thái phát nhạc:", error);
     }
 
     syncButtonState();

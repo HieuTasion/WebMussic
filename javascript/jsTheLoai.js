@@ -86,9 +86,11 @@ function renderSongsByGenre(genreName) {
   if (!grid || !genre) return;
 
   window.scrollTo({ top: 350, behavior: "smooth" });
-  grid.style.display = "flex";
-  grid.style.flexDirection = "column";
-  grid.style.gap = "15px";
+
+  // Tắt chế độ Grid của danh mục để hiển thị danh sách bài hát theo hàng dọc
+  grid.classList.remove("genres-grid");
+  grid.style.display = "block";
+  grid.style.gap = "0";
 
   // Tạo khung tiêu đề kèm ô tìm kiếm
   grid.innerHTML = `
@@ -139,16 +141,17 @@ function renderSongsByGenre(genreName) {
         const plays = song.Count || 0;
 
         return `
-        <div class="song-item-row" onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__genreSongsQueue, ${index})" style="background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; cursor: pointer;">
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <span style="color: #666; width: 25px; font-weight: bold;">${index + 1}</span>
-            <img src="${img}" style="width: 55px; height: 55px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-            <div>
-              <h4 class="genre-song-title" onclick="event.stopPropagation(); window.openSongDetail(window.__genreSongsQueue[${index}])" style="margin: 0; color: white; font-size: 1.1rem;">${name}</h4>
-              <p style="margin: 4px 0 0 0; color: #aaa; font-size: 0.85rem;">${artist}</p>
+        <div class="song-item-row" 
+             onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.__genreSongsQueue, ${index})">
+          <div class="d-flex align-items-center gap-3">
+            <span class="text-secondary fw-bold" style="width: 25px;">${index + 1}</span>
+            <img src="${img}" class="rounded shadow" style="width: 55px; height: 55px; object-fit: cover;">
+            <div class="text-start">
+              <h4 class="genre-song-title h6 mb-0 fw-bold">${name}</h4>
+              <p class="small mb-0">${artist}</p>
             </div>
           </div>
-          <div style="display: flex; gap: 30px; color: #ddd; font-size: 0.9rem;">
+          <div class="d-flex gap-4 small">
             <span><i class="fas fa-heart" style="color: #ff4757;"></i> ${likes}</span>
             <span><i class="fas fa-play"></i> ${plays}</span>
           </div>
@@ -169,8 +172,9 @@ function renderGenres(filterValue = "all") {
   const grid = document.getElementById("genresGrid");
   if (!grid) return;
 
-  grid.style.display = "grid";
-  grid.style.flexDirection = "unset";
+  // Khôi phục layout Grid từ CSS
+  grid.classList.add("genres-grid");
+  grid.style.display = ""; // Để CSS (.genres-grid) tự điều khiển
 
   let list = genresData;
   if (filterValue !== "all") {
@@ -179,7 +183,7 @@ function renderGenres(filterValue = "all") {
 
   if (list.length === 0) {
     grid.innerHTML =
-      '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Không tìm thấy thể loại nào phù hợp.</div>';
+      '<div class="col-12 text-center text-muted py-5">Không tìm thấy thể loại nào phù hợp.</div>';
     return;
   }
 
@@ -197,7 +201,7 @@ function renderGenres(filterValue = "all") {
               <span>❤ ${genre.totalLikes}</span>
             </div>
             <button class="listen-btn" onclick="renderSongsByGenre('${genre.name.replace(/'/g, "\\'")}')">
-              Kham pha →
+              Khám phá →
             </button>
           </div>
         </div>
@@ -284,14 +288,14 @@ function getIconByGenre(name) {
 
 function getGradientByGenre(name) {
   const map = {
-    Pop: "linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 100%)",
+    Pop: "linear-gradient(135deg, #00d4aa 0%, #0072FF 100%)",
     Rock: "linear-gradient(135deg, #232526 0%, #414345 100%)",
     EDM: "linear-gradient(135deg, #00C6FF 0%, #0072FF 100%)",
-    "Hip Hop": "linear-gradient(135deg, #F093FB 0%, #F5576C 100%)",
-    "K-Pop": "linear-gradient(135deg, #FF75C3 0%, #FFA647 100%)",
+    "Hip Hop": "linear-gradient(135deg, #00b38f 0%, #162a44 100%)",
+    "K-Pop": "linear-gradient(135deg, #00f5c4 0%, #0072FF 100%)",
   };
 
-  return map[name] || "linear-gradient(135deg, #667EEA 0%, #764BA2 100%)";
+  return map[name] || "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)";
 }
 
 window.renderGenres = renderGenres;

@@ -236,7 +236,7 @@ body.lyrics-overlay-open .content.page-lyrics {
 .recent-hero-copy p {
   max-width: 700px;
   margin: 0;
-  color: #6888aa;
+  color: #e0e7ef;
   font-size: 1rem;
   line-height: 1.7;
 }
@@ -260,7 +260,7 @@ body.lyrics-overlay-open .content.page-lyrics {
 
 .recent-count-label,
 .recent-last-song {
-  color: #6888aa;
+  color: #e0e7ef;
 }
 
 .recent-count-label {
@@ -399,7 +399,7 @@ body.lyrics-overlay-open .content.page-lyrics {
 .recent-empty-state {
   padding: 72px 24px;
   text-align: center;
-  color: #6888aa;
+  color: #e0e7ef;
 }
 
 .recent-empty-state i {
@@ -551,7 +551,7 @@ h6 {
 #player-artist,
 .small,
 .card .text-secondary {
-  color: #6888aa !important;
+  color: #e0e7ef !important;
 }
 
 .card-content p,
@@ -559,7 +559,7 @@ h6 {
   color: #8aaac8 !important;
 }
 
-.card-content h3,
+.card-content h3, /* Giữ nguyên màu trắng cho tiêu đề chính */
 .album-card h6,
 .featured-card h6 {
   color: #d0e8ff !important;
@@ -567,7 +567,7 @@ h6 {
 
 .hero-section h1,
 .hero-section .hero-desc {
-  color: #d0e8ff !important;
+  color: #e0e7ef !important; /* Đảm bảo mô tả hero cũng sáng hơn */
 }
 
 .genre-stats span {
@@ -641,12 +641,12 @@ h6 {
 
 #current-time,
 #total-duration {
-  color: #6888aa !important;
+  color: #e0e7ef !important;
 }
 
 #shuffle-btn,
 #favorite-btn {
-  color: #6888aa !important;
+  color: #e0e7ef !important;
 }
 
 #shuffle-btn:hover,
@@ -750,7 +750,8 @@ h6 {
   .fixed-bottom .col-6 .w-100.gap-2, /* Thanh progress bar */
   #shuffle-btn,
   #favorite-btn,
-  .fixed-bottom .col-3:last-child { /* Cụm Mic, List, Volume */
+  .fixed-bottom .col-3:last-child {
+    /* Cụm Mic, List, Volume */
     display: none !important;
   }
 

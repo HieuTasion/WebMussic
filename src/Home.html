@@ -19,15 +19,15 @@
 
     <style>
       :root {
-        --pink-primary: #d9485f;
-        --pink-light: #ee6b80;
-        --pink-dark: #b9354c;
-        --pink-soft: #f6b6c1;
-        --bg: #f5e6e8;
-        --card-bg: #ffffff;
-        --card-hover: #fff5f8;
-        --text-dark: #1a1a2e;
-        --text-gray: #6b4c5a;
+        --pink-primary: #00d4aa;
+        --pink-light: #00f5c4;
+        --pink-dark: #00b38f;
+        --pink-soft: rgba(0, 212, 170, 0.2);
+        --bg: #0f1629;
+        --card-bg: #0f1e35;
+        --card-hover: #132338;
+        --text-dark: #d0e8ff;
+        --text-gray: #6888aa;
       }
 
       /* Tùy chỉnh thanh cuộn chung cho Dashboard khi ở trang Home */
@@ -53,10 +53,14 @@
         padding-bottom: 120px; /* Chừa khoảng trống cho Player Bar ở dưới cùng */
       }
 
+      body {
+        background-color: var(--bg);
+      }
+
       .text-teal {
         color: var(--pink-primary) !important;
         font-weight: 700;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+        text-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
       }
 
       .bg-teal {
@@ -64,11 +68,11 @@
       }
 
       .hero-section {
-        background: linear-gradient(135deg, #ffffff, #fff0f5);
+        background: linear-gradient(135deg, #0f1e35, #0a1525);
         border-radius: 24px;
         padding: 40px;
-        border: 1px solid rgba(255, 107, 107, 0.2);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 212, 170, 0.15);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
       }
 
       .home-search-shell {
@@ -83,13 +87,13 @@
         gap: 12px;
         padding: 14px 18px;
         border-radius: 18px;
-        background: rgba(255, 255, 255, 0.88);
-        border: 1px solid rgba(255, 107, 107, 0.22);
-        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.08);
+        background: rgba(15, 30, 53, 0.88);
+        border: 1px solid rgba(0, 212, 170, 0.22);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
       }
 
       .home-search-input i {
-        color: var(--pink-primary);
+        color: #00d4aa;
         font-size: 1rem;
       }
 
@@ -117,7 +121,7 @@
         padding: 12px 14px;
         border: none;
         border-radius: 18px;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(15, 30, 53, 0.8);
         color: var(--text-dark);
         cursor: pointer;
         text-align: left;
@@ -130,8 +134,8 @@
       .home-search-item:hover,
       .home-search-item.active {
         transform: translateY(-2px);
-        background: #fff5f8;
-        box-shadow: 0 12px 28px rgba(255, 107, 107, 0.12);
+        background: #1a2a44;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
       }
 
       .home-search-item img {
@@ -184,9 +188,9 @@
         align-items: center;
         padding: 16px;
         border-radius: 22px;
-        background: linear-gradient(135deg, #fff8fa, #ffffff);
-        border: 1px solid rgba(255, 107, 107, 0.18);
-        box-shadow: 0 14px 36px rgba(255, 107, 107, 0.08);
+        background: linear-gradient(135deg, #0f1e35, #162a44);
+        border: 1px solid rgba(0, 212, 170, 0.18);
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.3);
       }
 
       .home-selected-song.is-visible {
@@ -212,7 +216,7 @@
       }
 
       .btn-play-song {
-        background: var(--pink-primary);
+        background: #00d4aa;
         color: white !important;
         border: none;
         padding: 10px 24px;
@@ -222,13 +226,13 @@
         align-items: center;
         gap: 8px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(217, 72, 95, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
       }
 
       .btn-play-song:hover {
-        background: var(--pink-dark);
+        background: #00f5c4;
         transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(217, 72, 95, 0.4);
+        box-shadow: 0 6px 15px rgba(0, 212, 170, 0.4);
       }
 
       .btn-heart-song {
@@ -242,12 +246,12 @@
       }
 
       .btn-heart-song.active {
-        color: var(--pink-primary);
+        color: #00d4aa;
       }
 
       .album-card {
-        background: var(--card-bg);
-        border: 1px solid rgba(255, 107, 107, 0.15);
+        background: #0f1e35;
+        border: 1px solid rgba(0, 212, 170, 0.15);
         transition: all 0.3s ease;
         cursor: pointer;
         border-radius: 16px;
@@ -257,13 +261,13 @@
       .album-card:hover {
         transform: translateY(-5px);
         background: var(--card-hover);
-        border-color: var(--pink-primary);
-        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.1);
+        border-color: #00d4aa;
+        box-shadow: 0 10px 25px rgba(0, 212, 170, 0.2);
       }
 
       .featured-card {
-        background: #ffffff;
-        border: 1px solid rgba(255, 107, 107, 0.15);
+        background: #0f1e35;
+        border: 1px solid rgba(0, 212, 170, 0.15);
         border-radius: 16px;
         overflow: hidden;
         transition: all 0.3s ease;
@@ -272,12 +276,12 @@
 
       .featured-card:hover {
         transform: translateY(-5px);
-        border-color: var(--pink-primary);
-        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.12);
+        border-color: #00d4aa;
+        box-shadow: 0 10px 25px rgba(0, 212, 170, 0.2);
       }
 
       .featured-card:hover .bi-play-circle-fill {
-        color: var(--pink-primary) !important;
+        color: #00d4aa !important;
         transform: scale(1.1);
         transition: all 0.3s;
       }
@@ -298,8 +302,8 @@
       #main-content.page-home #current-album-title.text-teal,
       #main-content.page-home .featured-card .text-teal,
       #main-content.page-home #hot-songs-list .text-teal {
-        color: #ff5c78 !important;
-        text-shadow: 0 0 10px rgba(255, 92, 120, 0.22);
+        color: #00d4aa !important;
+        text-shadow: 0 0 10px rgba(0, 212, 170, 0.22);
       }
 
       #main-content.page-home #hero-content .text-teal {
@@ -308,23 +312,23 @@
 
       .bi-play-circle-fill {
         transition: all 0.3s;
-        color: var(--pink-primary) !important;
+        color: #00d4aa !important;
       }
 
       /* List Group Item */
       .list-group-item {
         background: transparent !important;
-        border-bottom: 1px solid rgba(255, 107, 107, 0.15) !important;
+        border-bottom: 1px solid rgba(0, 212, 170, 0.15) !important;
         transition: all 0.3s ease;
         color: var(--text-dark) !important;
       }
 
       .home-search-item:hover strong {
-        color: var(--pink-primary) !important;
+        color: #00d4aa !important;
       }
 
       .list-group-item:hover {
-        background: rgba(255, 107, 107, 0.05) !important;
+        background: rgba(0, 212, 170, 0.05) !important;
         padding-left: 10px !important;
       }
 
@@ -357,7 +361,7 @@
         gap: 12px;
         margin-bottom: 24px;
         padding-left: 18px;
-        border-left: 4px solid #ff5c78;
+        border-left: 4px solid #00d4aa;
       }
 
       #main-content.page-home .section-header h2 {
@@ -369,7 +373,7 @@
       }
 
       #main-content.page-home .section-header h2 i {
-        color: #ff5c78 !important;
+        color: #00d4aa !important;
       }
 
       #main-content.page-home .view-all {
@@ -384,14 +388,14 @@
       }
 
       #main-content.page-home .trend-card {
-        background: linear-gradient(135deg, #fff1f4 0%, #ffdce4 100%);
-        border: 1px solid rgba(255, 92, 120, 0.24);
+        background: linear-gradient(135deg, #0f1e35 0%, #0a1525 100%);
+        border: 1px solid rgba(0, 212, 170, 0.24);
         border-radius: 20px;
         padding: 18px 20px;
         display: flex;
         align-items: center;
         gap: 14px;
-        box-shadow: 0 12px 28px rgba(255, 92, 120, 0.14);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
         transition:
           transform 0.25s ease,
           box-shadow 0.25s ease,
@@ -400,8 +404,8 @@
 
       #main-content.page-home .trend-card:hover {
         transform: translateY(-3px);
-        border-color: #ff5c78;
-        box-shadow: 0 16px 32px rgba(255, 92, 120, 0.2);
+        border-color: #00d4aa;
+        box-shadow: 0 16px 32px rgba(0, 212, 170, 0.3);
       }
 
       #main-content.page-home .trend-number {
@@ -410,107 +414,104 @@
         border-radius: 14px;
         display: grid;
         place-items: center;
-        background: rgba(255, 92, 120, 0.14);
-        color: #ff6d86;
+        background: rgba(0, 212, 170, 0.14);
+        color: #00d4aa;
         font-size: 1rem;
         font-weight: 800;
       }
 
       #main-content.page-home .trend-info h4 {
         margin: 0 0 4px;
-        color: #7f1830 !important;
-        font-size: 1.02rem;
-        font-weight: 800;
+        color: 1.2;
+        letter-spacing: -0.01em;
       }
 
       #main-content.page-home .trend-info p {
         margin: 0;
-        color: #8f4357 !important;
-        font-size: 0.92rem;
-        font-weight: 600;
-      }
-
-      #main-content.page-home .trend-icon {
-        margin-left: auto;
-        color: #ff6d86;
-        font-size: 1.3rem;
-      }
-
-      /* Text colors */
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        color: var(--text-dark) !important;
-      }
-
-      .text-secondary {
-        color: var(--text-gray) !important;
-      }
-
-      .text-white {
-        color: var(--text-dark) !important;
-      }
-
-      .small.text-secondary {
-        color: var(--text-gray) !important;
-      }
-
-      /* Nút play */
-      .btn-play {
-        background: var(--pink-primary);
-        border: none;
-        color: white;
-        transition: all 0.3s;
-      }
-
-      .btn-play:hover {
-        background: var(--pink-light);
-        transform: scale(1.05);
-      }
-
-      .rank-badge {
-        min-width: 48px;
-        height: 48px;
-        border-radius: 16px;
-        display: grid;
-        place-items: center;
-        font-weight: 800;
-        color: #dc2626 !important;
-        background: rgba(220, 38, 38, 0.08);
-        border: 1px solid rgba(220, 38, 38, 0.3);
-        text-shadow: none;
-      }
-
-      .hot-song-genre {
-        font-size: 0.75rem;
-        padding: 0.28rem 0.65rem;
-        border-radius: 999px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      }
-
-      .hot-song-item {
-        border-radius: 18px !important;
-        margin-bottom: 10px;
-        background: rgba(255, 255, 255, 0.92) !important;
-        border: 1px solid rgba(255, 92, 120, 0.16) !important;
-      }
-
-      .hot-song-item:hover {
-        background: rgba(255, 244, 248, 0.98) !important;
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .hero-section {
-          padding: 25px;
+        color: #6888aa !important;
+        font-size: 0.85rem;
+        font-wei #main-content.page-home .trend-icon {
+          margin-left: auto;
+          color: #00d4aa;
+          font-size: 1.3rem;
         }
 
-        h2 {
-          font-size: 1.3rem;
+        /* Text colors */
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          color: var(--text-dark) !important;
+        }
+
+        .text-secondary {
+          color: var(--text-gray) !important;
+        }
+
+        .text-white {
+          color: var(--text-dark) !important;
+        }
+
+        .small.text-secondary {
+          color: var(--text-gray) !important;
+        }
+
+        /* Nút play */
+        .btn-play {
+          background: #00d4aa;
+          border: none;
+          color: white;
+          transition: all 0.3s;
+        }
+
+        .btn-play:hover {
+          background: #00f5c4;
+          transform: scale(1.05);
+        }
+
+        .rank-badge {
+          min-width: 48px;
+          height: 48px;
+          border-radius: 16px;
+          display: grid;
+          place-items: center;
+          font-weight: 800;
+          color: #dc2626 !important;
+          background: rgba(220, 38, 38, 0.08);
+          border: 1px solid rgba(220, 38, 38, 0.3);
+          text-shadow: none;
+        }
+
+        .hot-song-genre {
+          font-size: 0.75rem;
+          padding: 0.28rem 0.65rem;
+          border-radius: 999px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        .hot-song-item {
+          border-radius: 18px !important;
+          margin-bottom: 10px;
+          background: rgba(15, 30, 53, 0.92) !important;
+          border: 1px solid rgba(0, 212, 170, 0.16) !important;
+        }
+
+        .hot-song-item:hover {
+          background: rgba(255, 244, 248, 0.98) !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .hero-section {
+            padding: 25px;
+          }
+
+          h2 {
+            font-size: 1.3rem;
+          }
         }
       }
     </style>

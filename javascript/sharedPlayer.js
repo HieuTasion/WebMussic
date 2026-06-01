@@ -28,16 +28,16 @@ function renderSharedPlayer(state) {
       <div class="shared-player-info">
         <img class="shared-player-img" src="${escapeHtmlAttr(state.img || "https://via.placeholder.com/70")}" alt="Album art" />
         <div class="shared-player-copy">
-          <span class="shared-player-label">Dang phat</span>
-          <h4 id="shared-player-title">${escapeHtml(state.name || "Bai hat")}</h4>
-          <p id="shared-player-artist">${escapeHtml(state.artist || "Nghe si")}</p>
+          <span class="shared-player-label">Đang phát</span>
+          <h4 id="shared-player-title">${escapeHtml(state.name || "Bài hát")}</h4>
+          <p id="shared-player-artist">${escapeHtml(state.artist || "Nghệ sĩ")}</p>
         </div>
       </div>
       <div class="shared-player-actions">
-        <button id="sharedPlayPauseBtn" class="shared-player-btn" type="button" aria-label="Phat hoac tam dung">
+        <button id="sharedPlayPauseBtn" class="shared-player-btn" type="button" aria-label="Phát hoặc tạm dừng">
           <i class="bi ${state.isPlaying ? "bi-pause-fill" : "bi-play-fill"}"></i>
         </button>
-        <button id="sharedCloseBtn" class="shared-player-btn danger" type="button" aria-label="Dong player">
+        <button id="sharedCloseBtn" class="shared-player-btn danger" type="button" aria-label="Đóng player">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
@@ -84,7 +84,7 @@ function renderSharedPlayer(state) {
   sharedPlayPauseBtn.addEventListener("click", () => {
     if (sharedAudio.paused) {
       sharedAudio.play().catch((error) => {
-        console.error("Khong the tu dong phat tiep:", error);
+        console.error("Không thể tự động phát tiếp:", error);
       });
       return;
     }
