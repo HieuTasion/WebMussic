@@ -163,14 +163,14 @@ function renderForYouSongCards(songs, queueName) {
           <div>
             <h3>${escapeHtml(repairMojibake(song.Name || "Chưa có tên"))}</h3>
             <p class="for-you-meta">${escapeHtml(repairMojibake(song.Artist || "Đang cập nhật nghệ sĩ"))}</p>
-            <p class="for-you-meta">${escapeHtml(normalizeGenre(song.Genre || "Khác"))} • ${escapeHtml(song.Times || "Đang cập nhật")}</p>
+            <p class="for-you-meta">${escapeHtml(normalizeGenre(song.Genre || "Khac"))} • ${escapeHtml(song.Times || "Dang cap nhat")}</p>
           </div>
           <div class="for-you-song-actions">
             <button class="for-you-btn primary" type="button" onclick="playThisSong('${escapeJsString(song.Url)}', '${escapeJsString(song.Name)}', '${escapeJsString(song.Artist)}', '${escapeJsString(song.Img)}', window.${queueName}, ${index})">
-              <i class="bi bi-play-fill"></i> Phát
+              <i class="bi bi-play-fill"></i> Phat
             </button>
             <button class="for-you-btn" type="button" onclick="window.openSongDetail(window.${queueName}[${index}])">
-              Chi tiết
+              Chi tiet
             </button>
           </div>
         </article>
@@ -200,7 +200,7 @@ function renderForYouMixCards(mixes) {
             <p class="for-you-meta">${escapeHtml(repairMojibake(firstSong.Name || ""))}${secondSong ? ` • ${escapeHtml(repairMojibake(secondSong.Name || ""))}` : ""}</p>
             <div class="for-you-song-actions">
               <button class="for-you-btn primary" type="button" onclick="playThisSong('${escapeJsString(firstSong.Url)}', '${escapeJsString(firstSong.Name)}', '${escapeJsString(firstSong.Artist)}', '${escapeJsString(firstSong.Img)}', window.${queueName}, 0)">
-                <i class="bi bi-play-circle-fill"></i> Bắt đầu mix
+                <i class="bi bi-play-circle-fill"></i> Bat dau mix
               </button>
             </div>
           </div>
@@ -239,15 +239,15 @@ async function initForYouPage() {
   if (title) {
     title.textContent =
       favorites.length || recent.length
-        ? `Hôm nay nghe thử vài bài hợp gu ${insights.topGenre.toLowerCase()} của bạn`
-        : "Chưa có dữ liệu cá nhân? Đây là mix để bắt đầu";
+        ? `Hom nay nghe thu vai bai hop gu ${insights.topGenre.toLowerCase()} cua ban`
+        : "Chua co du lieu ca nhan? Day la mix de bat dau";
   }
 
   if (desc) {
     desc.textContent =
       favorites.length || recent.length
-        ? "Những gợi ý này được lấy từ bài bạn đã lưu, đã nghe và từ gu thể loại xuất hiện nhiều nhất."
-        : "Bạn chưa nghe nhiều nên mình tạm gợi ý các bài dễ vào tai và dễ bắt đầu xây gu.";
+        ? "Nhung goi y nay duoc lay tu bai ban da luu va gu the loai cua ban."
+        : "Ban chua nghe nhieu nen minh tam goi y cac bai de vao tai.";
   }
 
   if (note) {

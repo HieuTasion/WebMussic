@@ -3,14 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dành cho bạn | NVNP Music</title>
+    <title>Danh cho ban | NVNP Music</title>
     <style>
       .for-you-page {
         min-height: 100vh;
         padding: 28px 28px 120px;
         background:
-          radial-gradient(circle at top left, rgba(0, 212, 170, 0.12), transparent 24%),
-          radial-gradient(circle at top right, rgba(255, 92, 120, 0.1), transparent 22%);
+          radial-gradient(
+            circle at top left,
+            rgba(0, 212, 170, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(255, 92, 120, 0.1),
+            transparent 22%
+          );
       }
       .for-you-shell {
         display: grid;
@@ -20,13 +28,16 @@
       .for-you-panel {
         border: 1px solid rgba(0, 212, 170, 0.14);
         border-radius: 28px;
-        background: linear-gradient(145deg, rgba(17, 24, 39, 0.96), rgba(10, 15, 26, 0.92));
+        background: linear-gradient(
+          145deg,
+          rgba(17, 24, 39, 0.96),
+          rgba(10, 15, 26, 0.92)
+        );
         box-shadow: 0 22px 48px rgba(0, 0, 0, 0.24);
       }
       .for-you-hero {
         padding: 30px;
-        display: grid;
-        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr);
+        display: block; /* Don gian hoa layout hero */
         gap: 22px;
       }
       .for-you-eyebrow {
@@ -64,27 +75,6 @@
         max-width: 680px;
         line-height: 1.75;
       }
-      .for-you-note {
-        margin-top: 16px;
-        font-size: 0.95rem;
-      }
-      .for-you-stat-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-      .for-you-stat {
-        padding: 18px;
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-      }
-      .for-you-stat strong {
-        display: block;
-        margin-bottom: 8px;
-        color: #00d4aa;
-        font-size: 1.7rem;
-      }
       .for-you-panel {
         padding: 24px;
         display: grid;
@@ -113,13 +103,19 @@
       .for-you-song-grid,
       .for-you-mix-grid {
         display: grid;
-        gap: 16px;
+        gap: 20px;
       }
       .for-you-song-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(240px, 1fr)
+        ); /* Fix loi layout */
       }
       .for-you-mix-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(380px, 1fr)
+        ); /* Fix loi layout */
       }
       .for-you-song-card,
       .for-you-mix-card {
@@ -229,37 +225,19 @@
           <div class="for-you-hero-copy">
             <span class="for-you-eyebrow">
               <i class="bi bi-stars"></i>
-              Dành cho bạn
+              Danh cho ban
             </span>
-            <h1 id="for-you-title">Mix nhac duoc gom rieng cho gu nghe cua ban</h1>
+            <h1 id="for-you-title">Mix nhac cho gu cua ban</h1>
             <p id="for-you-description">
-              Trang nay tu dong goi y bai hat dua tren nhung gi ban da nghe, da
-              luu va cac the loai ban hay cham vao.
+              Goi y tu dong dua tren nhung gi ban da nghe va yeu thich.
             </p>
-            <p class="for-you-note" id="for-you-note">
-              Bat dau bang mot vai bai hat yeu thich de he thong goi y chuan hon.
-            </p>
-          </div>
-          <div class="for-you-stat-grid">
-            <div class="for-you-stat">
-              <strong id="for-you-top-genre">--</strong>
-              <span>The loai noi bat</span>
-            </div>
-            <div class="for-you-stat">
-              <strong id="for-you-top-artist">--</strong>
-              <span>Ca si ban quay lai</span>
-            </div>
-            <div class="for-you-stat">
-              <strong id="for-you-count">0</strong>
-              <span>Bai goi y hom nay</span>
-            </div>
           </div>
         </section>
         <section class="for-you-panel">
           <div class="for-you-panel-head">
             <div>
-              <h2>Vi ban da nghe nhung bai nay</h2>
-              <p>Goi y dua tren the loai va nghe si ban da tuong tac.</p>
+              <h2>Vi ban da nghe gan day</h2>
+              <p>Goi y dua tren the loai ban hay cham vao.</p>
             </div>
             <span class="for-you-chip">
               <i class="bi bi-lightning-charge-fill"></i>
@@ -271,8 +249,8 @@
         <section class="for-you-panel">
           <div class="for-you-panel-head">
             <div>
-              <h2>Mix nhanh cho hom nay</h2>
-              <p>Nhung combo nho de bam phat ngay khi muon nghe lien mach.</p>
+              <h2>Mix nhanh cho ban</h2>
+              <p>Nhung combo de bam phat ngay khi muon nghe lien mach.</p>
             </div>
             <span class="for-you-chip">
               <i class="bi bi-vinyl-fill"></i>
